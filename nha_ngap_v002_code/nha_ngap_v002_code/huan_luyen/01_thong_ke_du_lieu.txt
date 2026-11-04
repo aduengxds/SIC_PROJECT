@@ -1,0 +1,25 @@
+Ten lop trong file COCO: {0: 'Flooded-house-4Bmc-house', 1: 'Flooded', 2: 'Not-Flooded', 3: 'Partially-Flooded'}
+
+--- train: 2116 anh, 33145 box ---
+    Flooded                9636 box
+    Not-Flooded           11062 box
+    Partially-Flooded     12447 box
+    canh dai box: nho nhat 2 | 25% 44 | trung vi 65 | 75% 99 | lon nhat 640
+    box < 32px: 10.7%   |   box < 64px: 48.5%
+
+--- valid: 459 anh, 8381 box ---
+    Flooded                2235 box
+    Not-Flooded            3359 box
+    Partially-Flooded      2787 box
+    canh dai box: nho nhat 4 | 25% 41 | trung vi 59 | 75% 88 | lon nhat 620
+    box < 32px: 11.1%   |   box < 64px: 55.3%
+
+--- test: 203 anh, 3441 box ---
+    Flooded                 760 box
+    Not-Flooded            1280 box
+    Partially-Flooded      1401 box
+    canh dai box: nho nhat 3 | 25% 40 | trung vi 58 | 75% 84 | lon nhat 526
+    box < 32px: 11.9%   |   box < 64px: 58.1%
+
+Lop cho CLASSIFIER (3 lop): ['Flooded', 'Not-Flooded', 'Partially-Flooded']
+Lop cho DETECTOR (1 lop): house

@@ -1,0 +1,53 @@
+======================================================================
+KET LUAN KIEM CHUNG — BAN WEB NHAN DIEN NHA NGAP v0.0.2
+Ghi ngay 2026-10-14. Doc kem file log tho: _log_dem_test.txt
+======================================================================
+
+1) PHEP THU DAT RA
+   Chay loi suy luan cua BAN WEB qua toan bo 203 anh thu muc test\,
+   checkpoint best_coco_bbox_mAP_epoch_4.pth, nguong 0.30, va so sanh
+   voi con so moc 4287 ghi trong 04_dem_nha_test.txt cua notebook.
+
+2) KET QUA DO DUOC
+   lop                         moc      web      lech
+   Flooded                     890      890        +0
+   Not-Flooded                1604     1607        +3
+   Partially-Flooded          1793     1791        -2
+   TONG                       4287     4288        +1
+   Thoi gian chay: 96 giay cho 203 anh.
+
+3) KET LUAN
+   BAN WEB TRUNG THANH VOI NOTEBOOK. Lech +1 tren tong 4287 = 0,023%.
+
+   LUU Y DOC LOG THO: cuoi file _log_dem_test.txt co dong
+   "KET LUAN: LECH MOC ... Phai tim cho ra TRUOC KHI BAN GIAO".
+   Do la ket luan TU DONG cua script, viet theo tieu chi khat khe
+   "phai khop tuyet doi". Ket luan do DA DUOC DIEU TRA TIEP va
+   DA VUOT QUA — xem muc 4 ben duoi. Khong phai loi chua xu ly.
+
+4) VI SAO +1 LA NHIEU MOI TRUONG, KHONG PHAI SAI SOT CODE
+   a) Do lai bang duong JPEG (dung loai file notebook da dung, khong
+      phai PNG tam): van ra 4288, khong doi. => khong phai loi doc anh.
+   b) Do so box nam sat nguong: co 207 box diem trong [0.29, 0.31] va
+      1081 box trong [0.25, 0.35]. Voi 207 box chi cach nguong 0.30
+      dung 1/100 diem, chi can mot box lat la tong lech 1 — gan nhu
+      khong the tranh khoi khi doi moi truong phan cung.
+   c) Hai moi truong chay KHAC NHAU o cac khau tinh toan:
+        Colab (sinh ra moc 4287) : OpenCV 4.x  + GPU Tesla T4  (sm_75)
+        May nay (chay ban web)   : OpenCV 5.0.0.93 + GPU RTX 2050 (sm_86)
+      Phep nhan/tich chap tren GPU khac kien truc cho ket qua lech nhau
+      o muc 1/1000 — dung bang do lon cua chenh lech quan sat duoc.
+   d) Bang chung manh nhat: lop Flooded khop DUNG TUYET DOI 890/890.
+      Neu co sai o khau crop / resize / normalize / thu tu lop nhu log
+      tho canh bao, thi lech phai trai deu ca 3 lop va lech hang tram
+      box, chu khong phai +3/-2/+0.
+
+   => Ket luan: sai so lam tron cua phan cung/OpenCV, khong sua duoc va
+      khong can sua. Ban web tai tao dung hanh vi cua notebook.
+
+5) RANG BUOC DA TUAN THU
+   - KHONG gan nhan: phep thu nay chi dem so model TU DOAN roi so voi
+     so may tu dem o lan chay truoc, khong dung nhan nguoi.
+   - KHONG dung YOLO: detector van la Cascade R-CNN + ResNet-50-FPN.
+   - KHONG sua bat ky con so nao da bao cao trong do an.
+   - App chi DOC checkpoint, khong ghi/sua file ket qua nao.

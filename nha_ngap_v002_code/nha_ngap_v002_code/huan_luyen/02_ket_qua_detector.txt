@@ -1,0 +1,12 @@
+=== KET QUA DETECTOR (tap test) ===
+checkpoint: /content/drive/MyDrive/nha_ngap_v002_out/work_det/epoch_20.pth
+
+coco/bbox_mAP                0.2770
+coco/bbox_mAP_50             0.5840
+coco/bbox_mAP_75             0.2330
+coco/bbox_mAP_l              0.3260
+coco/bbox_mAP_m              0.3050
+coco/bbox_mAP_s              0.1490
+
+GHI CHU: bbox_mAP_s = do chinh xac voi nha NHO (<32px) - day la chi so quan trong nhat
+        voi yeu cau dem nha nho / nha o xa cua do an.

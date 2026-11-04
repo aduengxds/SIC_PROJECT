@@ -1,0 +1,14 @@
+=== KET QUA CLASSIFIER ConvNeXt-Tiny (crop valid) ===
+
+confusion matrix (dong = nhan dung, cot = model doan):
+                             Flooded   Not-FloodedPartially-Flooded
+Flooded                         1514           115           606
+Not-Flooded                       55          2696           608
+Partially-Flooded                440           527          1820
+
+Flooded                acc 0.677  (1514/2235)
+Not-Flooded            acc 0.803  (2696/3359)
+Partially-Flooded      acc 0.653  (1820/2787)
+
+acc toan bo: 0.7195
+rieng cap kho nhat Flooded vs Partially-Flooded: 0.664 (3334/5022)

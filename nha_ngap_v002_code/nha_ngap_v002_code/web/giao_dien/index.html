@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nhận diện nhà ngập v0.0.2</title>
+<style>
+  :root{
+    --nen:#0f1418; --nen2:#161d23; --vien:#26333d; --chu:#e6edf3;
+    --chu2:#93a4b3; --nhan:#2f81f7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--nen); color:var(--chu);
+    font:15px/1.55 "Segoe UI",system-ui,-apple-system,"Noto Sans",sans-serif;
+    padding:14px; padding-bottom:40px;
+  }
+  header{max-width:1180px;margin:0 auto 16px}
+  h1{margin:0 0 4px;font-size:21px;letter-spacing:-.2px}
+  .phu{color:var(--chu2);font-size:13px}
+  .phu b{color:#c9d6e2;font-weight:600}
+
+  .khung-lon{max-width:1180px;margin:0 auto}
+  .the{
+    background:var(--nen2);border:1px solid var(--vien);border-radius:12px;
+    padding:14px;margin-bottom:14px;
+  }
+  .the h2{margin:0 0 10px;font-size:14px;font-weight:600;color:var(--chu2);
+    text-transform:uppercase;letter-spacing:.6px}
+
+  /* --- vung tha anh --- */
+  #tha{
+    border:2px dashed #34434f;border-radius:12px;padding:26px 16px;text-align:center;
+    cursor:pointer;transition:border-color .15s,background .15s;
+  }
+  #tha:hover,#tha.thu{border-color:var(--nhan);background:#132030}
+  #tha .to{font-size:30px;line-height:1;margin-bottom:8px;opacity:.85}
+  #tha .nhan{font-weight:600;margin-bottom:3px}
+  #tha .nho{color:var(--chu2);font-size:12.5px}
+  .nut-hang{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+  button,.nut{
+    background:#22303c;color:var(--chu);border:1px solid #33444f;
+    border-radius:9px;padding:9px 15px;font:inherit;font-size:14px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  button:hover:not(:disabled),.nut:hover{background:#2b3c49;border-color:#43596a}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button.chinh{background:var(--nhan);border-color:var(--nhan);color:#fff;font-weight:600}
+  button.chinh:hover:not(:disabled){background:#4a94f8;border-color:#4a94f8}
+  #ten-tep{color:var(--chu2);font-size:12.5px;margin-top:9px;text-align:center;
+    word-break:break-all}
+
+  /* --- dieu khien --- */
+  .luoi-dk{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .o-dk label{display:block;font-size:13px;color:var(--chu2);margin-bottom:6px}
+  select{
+    width:100%;background:#0e1519;color:var(--chu);border:1px solid #33444f;
+    border-radius:9px;padding:9px 11px;font:inherit;font-size:13.5px;
+  }
+  .hang-nguong{display:flex;align-items:center;gap:12px}
+  input[type=range]{
+    flex:1;-webkit-appearance:none;appearance:none;height:5px;border-radius:3px;
+    background:#2c3a45;outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+    background:var(--nhan);cursor:pointer;border:3px solid #0f1418;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:14px;height:14px;border-radius:50%;background:var(--nhan);
+    cursor:pointer;border:3px solid #0f1418;
+  }
+  #nhan-nguong{
+    min-width:44px;text-align:right;font-variant-numeric:tabular-nums;
+    font-weight:600;font-size:14px;
+  }
+  .ghichu{color:var(--chu2);font-size:12px;margin-top:7px}
+
+  /* --- ket qua --- */
+  #vung-kq{display:none}
+  .luoi-anh{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .hop-anh{
+    background:#0b1014;border:1px solid var(--vien);border-radius:10px;
+    overflow:hidden;display:flex;flex-direction:column;
+  }
+  .hop-anh .dau{
+    padding:7px 11px;font-size:12.5px;color:var(--chu2);
+    border-bottom:1px solid var(--vien);background:#131a20;
+  }
+  .hop-anh .than{flex:1;display:flex;align-items:center;justify-content:center;
+    min-height:150px;padding:8px}
+  .hop-anh img{max-width:100%;max-height:62vh;display:block;border-radius:5px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #1e2a33}
+  th{color:var(--chu2);font-weight:600;font-size:12px;text-transform:uppercase;
+    letter-spacing:.5px}
+  td.so{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  tfoot td{border-bottom:none;font-weight:700;font-size:15px;padding-top:11px}
+  .cham{
+    display:inline-block;width:11px;height:11px;border-radius:3px;
+    margin-right:8px;vertical-align:-1px;
+  }
+
+  /* --- trang thai --- */
+  #bao{
+    display:none;border-radius:9px;padding:11px 13px;font-size:13.5px;
+    margin-bottom:13px;
+  }
+  #bao.loi{background:#3a1618;border:1px solid #6b2a2f;color:#ffc9cd;display:block}
+  #bao.tot{background:#12301d;border:1px solid #295c3a;color:#b6f0c9;display:block}
+  #dang-chay{
+    display:none;align-items:center;gap:11px;color:var(--chu2);
+    font-size:13.5px;padding:10px 0 2px;
+  }
+  #dang-chay.hien{display:flex}
+  .quay{
+    width:15px;height:15px;border:2px solid #33444f;border-top-color:var(--nhan);
+    border-radius:50%;animation:q .7s linear infinite;flex:none;
+  }
+  @keyframes q{to{transform:rotate(360deg)}}
+
+  #cho-model{
+    display:none;text-align:center;padding:28px 16px;color:var(--chu2);
+  }
+  #cho-model.hien{display:block}
+  #cho-model .to{font-size:30px;margin-bottom:10px;opacity:.7}
+
+  @media(max-width:760px){
+    body{padding:11px}
+    .luoi-dk,.luoi-anh{grid-template-columns:1fr}
+    .hop-anh img{max-height:none}
+    h1{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Nhận diện nhà ngập <span style="opacity:.5">v0.0.2</span></h1>
+  <div class="phu" id="dong-phu">Cascade R-CNN (1 lớp: nhà) → ConvNeXt-Tiny (3 lớp) · đang kết nối…</div>
+</header>
+
+<div class="khung-lon">
+
+  <div id="cho-model" class="the">
+    <div class="to">⏳</div>
+    <div><b>Đang nạp model vào GPU…</b></div>
+    <div class="nho" style="margin-top:6px">Mất khoảng 10–25 giây. Trang sẽ tự hiện khi xong.</div>
+  </div>
+
+  <div id="bao"></div>
+
+  <!-- ============ NẠP ẢNH ============ -->
+  <div class="the" id="the-nap" style="display:none">
+    <h2>1 · Chọn ảnh</h2>
+
+    <div id="tha">
+      <div class="to">🖼</div>
+      <div class="nhan">Kéo ảnh vào đây</div>
+      <div class="nho">hoặc bấm để chọn tệp — jpg, png, webp, bmp, tif</div>
+      <div class="nut-hang">
+        <button class="chinh" id="nut-chon" type="button">Chọn ảnh</button>
+        <button id="nut-chup" type="button">📷 Chụp ảnh</button>
+      </div>
+      <div id="ten-tep"></div>
+    </div>
+
+    <input type="file" id="tep" accept="image/*" hidden>
+    <input type="file" id="tep-chup" accept="image/*" capture="environment" hidden>
+  </div>
+
+  <!-- ============ ĐIỀU KHIỂN ============ -->
+  <div class="the" id="the-dk" style="display:none">
+    <h2>2 · Tuỳ chọn</h2>
+    <div class="luoi-dk">
+      <div class="o-dk">
+        <label for="nguong">Ngưỡng tin cậy của detector — <b id="nhan-nguong">0.30</b></label>
+        <div class="hang-nguong">
+          <input type="range" id="nguong" min="0.05" max="0.90" step="0.05" value="0.30">
+        </div>
+        <div class="ghichu">Hạ ngưỡng → bắt được nhiều nhà hơn nhưng dễ nhận nhầm.
+          Số liệu của đồ án đo ở ngưỡng 0.30.</div>
+      </div>
+      <div class="o-dk">
+        <label for="model">Checkpoint detector</label>
+        <select id="model"></select>
+        <div class="ghichu" id="ghichu-model"></div>
+      </div>
+    </div>
+    <div id="dang-chay"><span class="quay"></span><span id="chu-dang-chay">Đang suy luận…</span></div>
+  </div>
+
+  <!-- ============ KẾT QUẢ ============ -->
+  <div id="vung-kq">
+    <div class="the">
+      <h2>3 · Kết quả</h2>
+      <div class="luoi-anh">
+        <div class="hop-anh">
+          <div class="dau">Ảnh gốc</div>
+          <div class="than"><img id="anh-goc" alt="Ảnh gốc"></div>
+        </div>
+        <div class="hop-anh">
+          <div class="dau" id="dau-kq">Ảnh đã nhận diện</div>
+          <div class="than"><img id="anh-kq" alt="Ảnh đã nhận diện"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="the">
+      <h2>4 · Số nhà đếm được</h2>
+      <table>
+        <thead>
+          <tr><th>Loại</th><th style="text-align:right">Số nhà</th></tr>
+        </thead>
+        <tbody id="than-bang"></tbody>
+        <tfoot>
+          <tr>
+            <td>TỔNG</td>
+            <td class="so" id="o-tong">0</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="ghichu" id="dong-so">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+// Tên lớp hiển thị tiếng Việt. Khoá là tên lớp THẬT trong checkpoint —
+// không khớp khoá nào thì rơi về tên gốc, không vỡ giao diện.
+var TEN_VI = {
+  'Flooded': 'Ngập',
+  'Not-Flooded': 'Không ngập',
+  'Partially-Flooded': 'Ngập một phần'
+};
+
+var MAU_MAC_DINH = '#8b98a5';
+
+var tt = null;          // thông tin từ /api/thong_tin
+var tepDangCo = null;   // File đang giữ, để gửi lại khi kéo ngưỡng
+var dangBan = false;
+var urlCu = null;       // URL.createObjectURL cần thu hồi, không thì rò rỉ bộ nhớ
+
+var $ = function (id) { return document.getElementById(id); };
+
+function hienThi(phanTu, hien) {
+  // 'block' chu KHONG phai '': #vung-kq bi an bang CSS (display:none trong
+  // <style>), nen dat lai thanh chuoi rong se go inline ra va luat CSS cu van
+  // thang -> phan tu khong hien. Dat thang 'block' moi ghi de duoc.
+  phanTu.style.display = hien ? 'block' : 'none';
+}
+
+function baoLoi(chu) {
+  var b = $('bao');
+  b.className = 'loi';
+  b.textContent = chu;
+}
+
+function baoTot(chu) {
+  var b = $('bao');
+  b.className = 'tot';
+  b.textContent = chu;
+  setTimeout(function () { b.className = ''; }, 4000);
+}
+
+function xoaBao() {
+  var b = $('bao');
+  b.className = '';
+  b.textContent = '';
+}
+
+function tenHienThi(khoa) {
+  return TEN_VI[khoa] || khoa;
+}
+
+// ---------------------------------------------------------------------------
+// Khởi động: chờ model nạp xong mới hiện giao diện
+// ---------------------------------------------------------------------------
+function taiThongTin() {
+  return fetch('/api/thong_tin')
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (d) {
+      tt = d;
+
+      if (!d.san_sang) {                    // model chưa nạp xong → thử lại
+        setTimeout(taiThongTin, 1500);
+        return;
+      }
+
+      // Dòng phụ đề
+      var phu = 'Cascade R-CNN (1 lớp: nhà) → ConvNeXt-Tiny (' +
+                d.ten_lop.length + ' lớp) · ';
+      phu += d.thiet_bi === 'cpu' ? 'chạy CPU (chậm)' : ('GPU: ' + (d.gpu || d.thiet_bi));
+      $('dong-phu').textContent = phu;
+
+      // Ô chọn checkpoint
+      var sel = $('model');
+      sel.innerHTML = '';
+      d.checkpoints.forEach(function (c) {
+        var o = document.createElement('option');
+        o.value = c.khoa;
+        o.textContent = c.nhan + (c.co ? '' : '  (thiếu tệp!)');
+        o.disabled = !c.co;
+        if (c.khoa === d.khoa_det) o.selected = true;
+        sel.appendChild(o);
+      });
+      capNhatGhiChuModel();
+
+      // Thanh trượt
+      var ng = $('nguong');
+      ng.value = d.nguong_mac_dinh;
+      $('nhan-nguong').textContent = Number(d.nguong_mac_dinh).toFixed(2);
+
+      hienThi($('cho-model'), false);
+      hienThi($('the-nap'), true);
+      hienThi($('the-dk'), true);
+    })
+    .catch(function (e) {
+      baoLoi('Không kết nối được máy chủ: ' + e.message +
+             ' — kiểm tra cửa sổ chạy web còn mở không.');
+      setTimeout(taiThongTin, 3000);
+    });
+}
+
+function capNhatGhiChuModel() {
+  var sel = $('model');
+  var c = (tt.checkpoints || []).filter(function (x) { return x.khoa === sel.value; })[0];
+  if (!c) { $('ghichu-model').textContent = ''; return; }
+  $('ghichu-model').textContent =
+    (c.co ? '' : '⚠ Không tìm thấy tệp checkpoint này. ') +
+    'Đổi checkpoint sẽ nạp lại model, mất thêm 10–25 giây cho lần suy luận kế tiếp.';
+}
+
+// ---------------------------------------------------------------------------
+// Chọn / kéo-thả ảnh
+// ---------------------------------------------------------------------------
+function nhanTep(f) {
+  if (!f) return;
+  if (!/^image\//.test(f.type) && !/\.(jpe?g|png|webp|bmp|tiff?)$/i.test(f.name)) {
+    baoLoi('Tệp này không phải ảnh: ' + f.name);
+    return;
+  }
+  xoaBao();
+  tepDangCo = f;
+  $('ten-tep').textContent = f.name + '  (' + (f.size / 1024).toFixed(0) + ' KB)';
+
+  if (urlCu) URL.revokeObjectURL(urlCu);
+  urlCu = URL.createObjectURL(f);
+  $('anh-goc').src = urlCu;
+
+  hienThi($('vung-kq'), true);            // hiện khung để thấy ảnh gốc ngay
+  // Ẩn ảnh kết quả cho tới khi có kết quả thật. Nếu chỉ xoá src thì trình
+  // duyệt hiện biểu tượng ảnh hỏng, và khi request lỗi thì nó nằm đó luôn.
+  $('anh-kq').style.display = 'none';
+  $('anh-kq').removeAttribute('src');
+  $('dau-kq').textContent = 'Ảnh đã nhận diện — chưa chạy';
+  $('than-bang').innerHTML = '';
+  $('o-tong').textContent = '0';
+  $('dong-so').textContent = '';
+
+  guiAnh();
+}
+
+$('tha').addEventListener('click', function (e) {
+  if (e.target.closest('button')) return;   // bấm nút thì để nút tự lo
+  $('tep').click();
+});
+$('nut-chon').addEventListener('click', function (e) {
+  e.stopPropagation(); $('tep').click();
+});
+$('nut-chup').addEventListener('click', function (e) {
+  e.stopPropagation(); $('tep-chup').click();
+});
+
+$('tep').addEventListener('change', function () {
+  nhanTep(this.files[0]); this.value = '';
+});
+$('tep-chup').addEventListener('change', function () {
+  nhanTep(this.files[0]); this.value = '';
+});
+
+['dragenter', 'dragover'].forEach(function (ev) {
+  $('tha').addEventListener(ev, function (e) {
+    e.preventDefault(); $('tha').className = 'thu';
+  });
+});
+['dragleave', 'drop'].forEach(function (ev) {
+  $('tha').addEventListener(ev, function (e) {
+    e.preventDefault(); $('tha').className = '';
+  });
+});
+$('tha').addEventListener('drop', function (e) {
+  if (e.dataTransfer && e.dataTransfer.files.length) nhanTep(e.dataTransfer.files[0]);
+});
+
+// ---------------------------------------------------------------------------
+// Gửi lên máy chủ
+// ---------------------------------------------------------------------------
+function guiAnh() {
+  if (!tepDangCo || dangBan) return;
+
+  dangBan = true;
+  $('dang-chay').className = 'hien';
+  $('chu-dang-chay').textContent = 'Đang suy luận…';
+  $('nut-chon').disabled = true;
+  $('nut-chup').disabled = true;
+
+  var fd = new FormData();
+  fd.append('anh', tepDangCo, tepDangCo.name);
+  fd.append('nguong', $('nguong').value);
+  fd.append('model', $('model').value);
+
+  fetch('/api/du_doan', { method: 'POST', body: fd })
+    .then(function (r) {
+      return r.json().catch(function () {
+        throw new Error('Máy chủ trả về dữ liệu không đọc được (HTTP ' + r.status + ')');
+      }).then(function (d) {
+        if (!r.ok) throw new Error(d.detail || ('HTTP ' + r.status));
+        return d;
+      });
+    })
+    .then(function (d) {
+      xoaBao();
+
+      $('anh-kq').src = d.anh_ket_qua;
+      $('anh-kq').style.display = '';
+      $('dau-kq').textContent = 'Ảnh đã nhận diện — ngưỡng ' +
+        Number(d.nguong).toFixed(2);
+
+      // Bảng đếm
+      var tb = $('than-bang');
+      tb.innerHTML = '';
+      d.ten_lop.forEach(function (k) {
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td');
+        var cham = document.createElement('span');
+        cham.className = 'cham';
+        cham.style.background = (tt.mau && tt.mau[k]) || MAU_MAC_DINH;
+        td1.appendChild(cham);
+        td1.appendChild(document.createTextNode(tenHienThi(k)));
+        var td2 = document.createElement('td');
+        td2.className = 'so';
+        td2.textContent = d.dem[k] || 0;
+        tr.appendChild(td1); tr.appendChild(td2);
+        tb.appendChild(tr);
+      });
+      $('o-tong').textContent = d.tong;
+
+      var phu = 'Thời gian: ' + Math.round(d.ms) + ' ms · ảnh ' +
+                d.kich_thuoc[0] + '×' + d.kich_thuoc[1];
+      if (d.nap_lai) phu += ' · vừa nạp lại checkpoint nên lần này chậm hơn';
+      $('dong-so').textContent = phu;
+
+      hienThi($('vung-kq'), true);
+      $('vung-kq').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    })
+    .catch(function (e) {
+      baoLoi('Lỗi: ' + e.message);
+      $('dau-kq').textContent = 'Ảnh đã nhận diện — lỗi';
+    })
+    .then(function () {
+      dangBan = false;
+      $('dang-chay').className = '';
+      $('nut-chon').disabled = false;
+      $('nut-chup').disabled = false;
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Đổi tuỳ chọn → chạy lại ảnh đang có
+// ---------------------------------------------------------------------------
+var henNgam = null;
+$('nguong').addEventListener('input', function () {
+  $('nhan-nguong').textContent = Number(this.value).toFixed(2);
+  clearTimeout(henNgam);
+  // Chờ 350 ms sau lần kéo cuối mới gửi — kéo thanh trượt bắn ra hàng chục
+  // sự kiện, gửi hết là nghẽn GPU.
+  henNgam = setTimeout(function () { if (tepDangCo) guiAnh(); }, 350);
+});
+
+$('model').addEventListener('change', function () {
+  capNhatGhiChuModel();
+  if (tepDangCo) guiAnh();
+});
+
+// ---------------------------------------------------------------------------
+taiThongTin();
+</script>
+</body>
+</html>

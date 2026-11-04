@@ -1,0 +1,39 @@
+# Web "Nhan dien nha ngap v0.0.2" — cac goi trong venv.
+# Phien ban da kiem chung tren may nay: Python 3.13.14 (64-bit), Windows, RTX 2050.
+#
+# CACH CAI: dung CAI_DAT.bat (no chia lenh theo tung index cho ro rang).
+# Neu muon cai tay bang file nay:
+#     venv\Scripts\python.exe -m pip install -r requirements.txt
+#
+# Index duoi day chi de pip TIM dung ban torch; PyPI van duoc hoi song song.
+--extra-index-url https://download.pytorch.org/whl/cu132
+
+# 1) torch CUDA — index chinh thuc cua PyTorch (ban +cu132 khong co tren PyPI)
+torch==2.13.0+cu132
+torchvision==0.28.0+cu132
+
+# 2) mmcv — wheel cong dong MiroPsota, dung to hop pt2.13.0/cu132/cp313/win_amd64
+#    (OpenMMLab ngung phat hanh wheel tu 7/2024; ban cuoi chi toi Python 3.12)
+#
+#    Dung URL TRUC TIEP, KHONG dung:
+#        --extra-index-url https://miropsota.github.io/torch_packages_builder/mmcv/
+#    Da thu that tren may nay: dang --extra-index-url thi pip chi nhin thay ban
+#    tren PyPI (2.2.0 khong hau to) roi bao "No matching distribution found",
+#    du trang index do CO chua wheel nay. Dan thang URL thi cai duoc ngay.
+#
+#    Trong file .bat phai viet "%%2B" thay cho "%2B" (xem CAI_DAT.bat buoc [4/6]);
+#    o file .txt nay thi viet "%2B" nhu binh thuong.
+mmcv @ https://github.com/MiroPsota/torch_packages_builder/releases/download/mmcv-2.2.0%2Ba8073c7/mmcv-2.2.0%2Ba8073c7pt2.13.0cu132-cp313-cp313-win_amd64.whl
+
+# 3) OpenMMLab
+mmdet==3.3.0
+mmengine==0.10.7
+
+# 4) web
+fastapi
+uvicorn[standard]
+python-multipart
+pillow
+
+# KHONG cai opencv-python-headless: mmcv keo opencv-python san, hai goi cung
+# ghi de thu muc cv2/ se lam hong import cv2.

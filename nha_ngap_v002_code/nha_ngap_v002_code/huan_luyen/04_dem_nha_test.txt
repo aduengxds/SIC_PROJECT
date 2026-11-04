@@ -1,0 +1,9 @@
+=== DEM NHA TREN TOAN BO TAP TEST (203 anh) ===
+
+lop                       thuc te  model dem lech TB/anh
+Flooded                       760        751       2.46
+Not-Flooded                  1280       1256       3.16
+Partially-Flooded            1401       1407       3.85
+TONG                         3441       3414       9.47
+
+(chi tinh tren 191 anh co nha; 12 anh khong nha khong tinh vao lech TB)

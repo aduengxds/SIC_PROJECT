@@ -1,0 +1,3308 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nhà Ngập</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ---------------------------------------------------------------
+   Nhà Ngập — bản thử giao diện
+   Hướng: trắng / đen cơ bản, kính mờ trung tính, không gradient màu.
+   Màu giữ lại chỉ là màu ngữ nghĩa P1/P2/P3. Ảnh nằm trên canvas tối.
+   --------------------------------------------------------------- */
+:root {
+  --font-ui: "Be Vietnam Pro", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --bg: #ffffff;
+  --bg-2: #ffffff;
+  --fg: #0a0a0a;
+  --fg-muted: #525252;
+  --fg-soft: #737373;
+  --accent: #0a0a0a;
+  --accent-2: #0a0a0a;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(0, 0, 0, 0.06);
+  --p1: #dc2626;
+  --p1-soft: rgba(220, 38, 38, 0.10);
+  --p2: #d97706;
+  --p2-soft: rgba(217, 119, 6, 0.13);
+  --p3: #059669;
+  --p3-soft: rgba(5, 150, 105, 0.11);
+  --box-p1: #ff5a5a;
+  --box-p2: #ffb020;
+  --box-p3: #35d399;
+  --card: #ffffff;
+  --glass: rgba(255, 255, 255, 0.78);
+  --glass-strong: rgba(255, 255, 255, 0.94);
+  --glass-border: #e5e5e5;
+  --header-bg: #ffffff;
+  --line: #e5e5e5;
+  --line-strong: #d4d4d4;
+  --sheen: transparent;
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --stage: #0a0a0a;
+  --blob-1: transparent;
+  --blob-2: transparent;
+  --blob-3: transparent;
+  --noise-opacity: 0;
+  --focus: #0a0a0a;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+  --r-pill: 999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000;
+    --bg-2: #000000;
+    --fg: #f5f5f5;
+    --fg-muted: #a3a3a3;
+    --fg-soft: #737373;
+    --accent: #f5f5f5;
+    --accent-2: #f5f5f5;
+    --accent-ink: #0a0a0a;
+    --accent-soft: rgba(255, 255, 255, 0.08);
+    --p1: #f87171;
+    --p1-soft: rgba(248, 113, 113, 0.13);
+    --p2: #fbbf24;
+    --p2-soft: rgba(251, 191, 36, 0.13);
+    --p3: #34d399;
+    --p3-soft: rgba(52, 211, 153, 0.13);
+    --card: #0c0c0c;
+    --glass: rgba(10, 10, 10, 0.78);
+    --glass-strong: rgba(18, 18, 18, 0.94);
+    --glass-border: #262626;
+    --header-bg: #0c0c0c;
+    --line: #262626;
+    --line-strong: #333333;
+    --sheen: transparent;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.45);
+    --stage: #050505;
+    --blob-1: transparent;
+    --blob-2: transparent;
+    --blob-3: transparent;
+    --noise-opacity: 0;
+    --focus: #f5f5f5;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --bg-2: #000000;
+  --fg: #f5f5f5;
+  --fg-muted: #a3a3a3;
+  --fg-soft: #737373;
+  --accent: #f5f5f5;
+  --accent-2: #f5f5f5;
+  --accent-ink: #0a0a0a;
+  --accent-soft: rgba(255, 255, 255, 0.08);
+  --p1: #f87171;
+  --p1-soft: rgba(248, 113, 113, 0.13);
+  --p2: #fbbf24;
+  --p2-soft: rgba(251, 191, 36, 0.13);
+  --p3: #34d399;
+  --p3-soft: rgba(52, 211, 153, 0.13);
+  --card: #0c0c0c;
+  --glass: rgba(10, 10, 10, 0.78);
+  --glass-strong: rgba(18, 18, 18, 0.94);
+  --glass-border: #262626;
+  --header-bg: #0c0c0c;
+  --line: #262626;
+  --line-strong: #333333;
+  --sheen: transparent;
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --stage: #050505;
+  --blob-1: transparent;
+  --blob-2: transparent;
+  --blob-3: transparent;
+  --noise-opacity: 0;
+  --focus: #f5f5f5;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+img { display: block; max-width: 100%; }
+a { color: var(--accent); }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.ic {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+.ic-sm { width: 13px; height: 13px; }
+.ic-lg { width: 20px; height: 20px; }
+
+/* ---------- ambient background ---------- */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg);
+}
+.blob, .grain { display: none; }
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  animation: drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.blob.b1 { width: 54vw; height: 54vw; background: var(--blob-1); top: -20vw; left: -12vw; }
+.blob.b2 { width: 46vw; height: 46vw; background: var(--blob-2); bottom: -22vw; right: -14vw; animation-duration: 36s; animation-delay: -9s; }
+.blob.b3 { width: 32vw; height: 32vw; background: var(--blob-3); top: 38%; left: 56%; animation-duration: 44s; animation-delay: -16s; }
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(4vw, 3vh, 0) scale(1.09); }
+}
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: var(--noise-opacity);
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+.app {
+  position: relative;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+/* ---------- glass surfaces ---------- */
+.glass {
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.glass::before { display: none; }
+.glass > * { position: relative; }
+
+body, .glass, .kpi, .panel, .viewer-card, .table-card, .statusbar, .icon-btn, .chip,
+.toggle-chip, .preset, .filter-chip, .house-card, .modal-card {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0 16px;
+  padding: 9px 10px 9px 12px;
+  border-radius: var(--r-lg);
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+}
+.brand-mark .ic { width: 21px; height: 21px; stroke-width: 1.7; }
+.brand-text { min-width: 0; }
+.brand-line { display: flex; align-items: center; gap: 7px; }
+.brand-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+.version {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1;
+  padding: 3px 5px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+}
+.brand-sub {
+  font-size: 10px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  margin-top: 1px;
+}
+.topbar .spacer { flex: 1 1 20px; }
+.status-pill, .gpu-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg-muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.status-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--p3);
+  box-shadow: 0 0 0 3px var(--p3-soft);
+  flex: none;
+}
+.gpu-pill { font-family: var(--font-mono); font-size: 9px; }
+.demo-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px 3px 7px;
+  border-radius: var(--r-pill);
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: var(--accent-soft);
+}
+.demo-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.10em;
+  color: var(--accent);
+  font-weight: 600;
+}
+.demo-wrap select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font-size: 10px;
+  padding: 3px 16px 3px 2px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+}
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  flex: none;
+  transition: transform 0.16s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.icon-btn:hover {
+  transform: translateY(-1px);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: var(--accent-soft);
+}
+.icon-btn:active { transform: translateY(0) scale(0.97); }
+.icon-btn[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+}
+
+/* ---------- workspace ---------- */
+.workspace {
+  display: grid;
+  grid-template-columns: 322px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---------- left panel ---------- */
+.panel {
+  position: sticky;
+  top: 82px;
+  max-height: calc(100vh - 96px);
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--r-xl);
+  display: flex;
+  flex-direction: column;
+}
+.panel-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 15px 15px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.panel-scroll::-webkit-scrollbar { width: 8px; }
+.panel-scroll::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--line);
+}
+.panel-scroll .panel-section:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.panel-actions {
+  flex: none;
+  margin: 0;
+  padding: 10px 15px 15px;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 0 0 var(--r-xl) var(--r-xl);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+}
+.section-label .ic { width: 13px; height: 13px; opacity: 0.85; }
+
+.thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--stage);
+  border: 1px solid var(--line);
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  background: rgba(0, 0, 0, 0.58);
+  pointer-events: none;
+}
+.thumb-meta {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  bottom: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #f5f5f5;
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+.thumb-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.thumb-dim { font-family: var(--font-mono); font-size: 9px; opacity: 0.75; flex: none; }
+.thumb-change {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  padding: 4px 7px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.58);
+  color: #f5f5f5;
+  font-size: 9px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.thumb-change:hover { background: rgba(0, 0, 0, 0.78); }
+.thumb-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 7px;
+  color: var(--fg-soft);
+  font-size: 10px;
+  border: 1px dashed var(--line-strong);
+  border-radius: inherit;
+  background: var(--card);
+}
+.thumb-empty .ic { width: 22px; height: 22px; opacity: 0.65; }
+
+.file-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--fg-soft);
+}
+.file-line .mono { font-family: var(--font-mono); }
+
+.seg {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+.seg button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--fg-muted);
+  padding: 7px 8px;
+  border-radius: 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 8px 5px 7px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg-muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.35;
+  transition: transform 0.16s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.preset:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.preset strong { font-size: 10.5px; font-weight: 600; color: var(--fg); }
+.preset .conf { font-family: var(--font-mono); font-size: 9px; letter-spacing: -0.02em; }
+.preset[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.preset[aria-pressed="true"] strong { color: var(--accent); }
+
+.threshold-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--fg-muted);
+}
+.threshold-line b {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+.threshold-delta { font-style: normal; font-size: 8.5px; color: var(--fg-soft); }
+.link-btn {
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 10.5px;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.link-btn:hover { text-decoration-thickness: 2px; }
+
+.range-row { display: flex; align-items: center; gap: 9px; }
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  min-width: 0;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent) var(--fill, 28%),
+    var(--line) var(--fill, 28%),
+    var(--line) 100%
+  );
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--glass-strong);
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 2px 8px rgba(0, 0, 0, 0.28);
+  cursor: grab;
+  transition: transform 0.15s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.12); }
+input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--glass-strong);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  cursor: grab;
+}
+.range-val {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--fg);
+  min-width: 38px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.advanced { display: flex; flex-direction: column; gap: 2px; }
+.advanced-note {
+  font-size: 9.5px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  padding: 7px 9px;
+  border-radius: 0 8px 8px 0;
+  margin: 2px 0 6px;
+}
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+}
+.switch-copy { min-width: 0; }
+.switch-copy .label { font-size: 11.5px; color: var(--fg); line-height: 1.35; }
+.switch-copy .hint { font-size: 9.5px; color: var(--fg-soft); line-height: 1.35; margin-top: 1px; }
+.switch {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--line);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+  transition: transform 0.2s ease;
+}
+.switch[aria-checked="true"] { background: var(--accent); border-color: transparent; }
+.switch[aria-checked="true"]::after { transform: translateX(16px); }
+
+.field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+}
+.field-row .label { font-size: 11.5px; }
+.field-row .hint { font-size: 9.5px; color: var(--fg-soft); line-height: 1.35; margin-top: 1px; }
+.number-input, .select {
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 6px 8px;
+}
+.number-input { width: 78px; text-align: right; }
+.select { width: 100%; font-family: var(--font-ui); font-size: 11px; padding: 8px 9px; }
+
+.btn-primary {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+.btn-primary:hover:not(:disabled) { transform: translateY(-1px); background: color-mix(in srgb, var(--accent) 86%, var(--bg)); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18); }
+.btn-primary:active:not(:disabled) { transform: translateY(0) scale(0.99); }
+.btn-primary:disabled { opacity: 0.55; }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--card);
+  color: var(--fg);
+  font-size: 11.5px;
+  font-weight: 500;
+  transition: transform 0.16s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.btn-secondary:hover { transform: translateY(-1px); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.btn-row { display: flex; gap: 7px; }
+.btn-row .btn-secondary { flex: 1; }
+
+.model-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 9px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.model-note .dot { margin-top: 5px; }
+.model-note .txt { font-size: 9.5px; line-height: 1.5; color: var(--fg-muted); }
+.model-note b { color: var(--fg); font-weight: 600; }
+
+/* ---------- results ---------- */
+.results { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.kpi {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  padding: 12px 13px 11px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.18s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.kpi:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--kpi-color) 45%, var(--line)); }
+.kpi::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--kpi-color);
+  opacity: 0.9;
+}
+.kpi::after { display: none; }
+.kpi[data-cls="P1"] { --kpi-color: var(--p1); --kpi-soft: var(--p1-soft); }
+.kpi[data-cls="P2"] { --kpi-color: var(--p2); --kpi-soft: var(--p2-soft); }
+.kpi[data-cls="P3"] { --kpi-color: var(--p3); --kpi-soft: var(--p3-soft); }
+.kpi[data-cls="all"] { --kpi-color: var(--accent); --kpi-soft: var(--accent-soft); }
+.kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kpi-icon {
+  width: 27px;
+  height: 27px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: var(--kpi-color);
+  background: var(--kpi-soft);
+  flex: none;
+}
+.kpi-icon .ic { width: 15px; height: 15px; }
+.kpi-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  text-align: right;
+  line-height: 1.25;
+}
+.kpi-value {
+  margin-top: 7px;
+  font-size: 31px;
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+.kpi-sub {
+  margin-top: 2px;
+  font-size: 9.5px;
+  color: var(--fg-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kpi[aria-pressed="true"] {
+  border-color: var(--kpi-color);
+  background: color-mix(in srgb, var(--kpi-color) 8%, var(--card));
+  box-shadow: 0 0 0 1px var(--kpi-color), var(--shadow-soft);
+}
+.kpi.pop .kpi-value { animation: pop 0.30s ease; }
+@keyframes pop {
+  0% { transform: scale(0.93); opacity: 0.55; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.ratio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 2px;
+}
+.ratio-label {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+.ratio-bar {
+  flex: 1;
+  min-width: 0;
+  height: 7px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  display: flex;
+  background: var(--line);
+}
+.ratio-seg { height: 100%; width: 0; transition: width 0.38s cubic-bezier(0.22, 1, 0.36, 1); }
+.ratio-seg.p1 { background: var(--p1); }
+.ratio-seg.p2 { background: var(--p2); }
+.ratio-seg.p3 { background: var(--p3); }
+.ratio-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--fg-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- viewer ---------- */
+.viewer-card { padding: 11px; border-radius: var(--r-xl); }
+.viewer-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 2px 2px 10px;
+}
+.viewer-title { display: flex; align-items: baseline; gap: 7px; min-width: 0; }
+.viewer-title strong { font-size: 12.5px; font-weight: 650; letter-spacing: -0.01em; }
+.viewer-title span { font-size: 9.5px; color: var(--fg-soft); font-family: var(--font-mono); white-space: nowrap; }
+.viewer-tools { margin-left: auto; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 7px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg-muted);
+  font-size: 9.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.toggle-chip::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.toggle-chip[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  background: var(--accent-soft);
+}
+.toggle-chip[aria-pressed="true"]::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.mode-mini {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.mode-mini button {
+  border: 0;
+  background: transparent;
+  color: var(--fg-muted);
+  padding: 4px 7px;
+  border-radius: 7px;
+  font-size: 9.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.mode-mini button[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.selected-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 4px 3px 7px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  white-space: nowrap;
+}
+.selected-info button {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  display: grid;
+  place-items: center;
+}
+.selected-info button:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+
+.stage-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border-radius: 16px;
+  background: transparent;
+}
+.stage {
+  position: relative;
+  width: min(100%, clamp(560px, calc(62vh * 4 / 3), 980px));
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--stage);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  touch-action: none;
+  user-select: none;
+}
+.stage > img.base {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.after-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  clip-path: inset(0 0 0 calc(var(--split, 50) * 1%));
+}
+.stage.mode-result .after-layer { clip-path: none; }
+.stage.mode-result .base { opacity: 0; }
+.stage.mode-compare .base { opacity: 1; }
+.after-layer > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.side-view {
+  display: none;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.stage.mode-side {
+  width: 100%;
+  aspect-ratio: auto;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  touch-action: pan-y;
+  user-select: auto;
+}
+.stage.mode-side > .base,
+.stage.mode-side > .after-layer,
+.stage.mode-side > .split-handle,
+.stage.mode-side > .stage-labels,
+.stage.mode-side > .stage-empty { display: none; }
+.stage.mode-side .side-view { display: grid; }
+.side-pane { min-width: 0; }
+.side-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--stage);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.side-frame > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.side-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 7px 2px 0;
+  font-size: 10px;
+  color: var(--fg-muted);
+}
+.side-caption strong { font-size: 10.5px; font-weight: 650; color: var(--fg); }
+.side-caption span { font-size: 9.5px; color: var(--fg-soft); }
+.side-empty {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.52);
+  color: #f5f5f5;
+  font-size: 10px;
+  line-height: 1.45;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.boxes { position: absolute; inset: 0; z-index: 4; }
+.boxes.is-hidden { display: none; }
+.box {
+  position: absolute;
+  border: 1.5px solid var(--bc);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bc) 7%, transparent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22);
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.box[data-cls="P1"] { --bc: var(--box-p1); }
+.box[data-cls="P2"] { --bc: var(--box-p2); }
+.box[data-cls="P3"] { --bc: var(--box-p3); }
+.box:hover { border-width: 2px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.38), 0 0 18px var(--bc); z-index: 6; }
+.box.is-selected {
+  border-width: 2px;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--bc), 0 0 30px var(--bc);
+  z-index: 7;
+}
+.box .tag {
+  position: absolute;
+  top: -5px;
+  left: -1px;
+  transform: translateY(-100%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.84);
+  border: 1px solid color-mix(in srgb, var(--bc) 55%, transparent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  line-height: 1.25;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+}
+.box .tag i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--bc);
+  flex: none;
+}
+.box.tag-inside .tag { top: 3px; left: 3px; transform: none; }
+.boxes.labels-off .tag { display: none; }
+.boxes.conf-off .tag .conf { display: none; }
+.boxes[data-filter="P1"] .box:not([data-cls="P1"]),
+.boxes[data-filter="P2"] .box:not([data-cls="P2"]),
+.boxes[data-filter="P3"] .box:not([data-cls="P3"]),
+.boxes.p1-only .box:not([data-cls="P1"]) {
+  opacity: 0.13;
+  pointer-events: none;
+}
+.boxes[data-filter="P1"] .box[data-cls="P1"],
+.boxes[data-filter="P2"] .box[data-cls="P2"],
+.boxes[data-filter="P3"] .box[data-cls="P3"],
+.boxes.p1-only .box[data-cls="P1"] { z-index: 5; }
+
+.split-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--split, 50) * 1%);
+  width: 2px;
+  z-index: 8;
+  border: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.88);
+  transform: translateX(-1px);
+  cursor: ew-resize;
+  display: none;
+  touch-action: none;
+}
+.stage.mode-compare .split-handle { display: block; }
+.split-handle .grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.42);
+}
+.split-handle .grip .ic { width: 17px; height: 17px; }
+.split-handle:hover .grip, .split-handle:focus-visible .grip {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: #fff;
+}
+
+.stage-labels {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 9px;
+  z-index: 9;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.stage-label {
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.62);
+  color: #f5f5f5;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.stage.mode-result .label-original { display: none; }
+
+.stage-empty {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(0, 0, 0, 0.52);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  text-align: center;
+}
+.stage-empty-card {
+  max-width: 330px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(10, 10, 10, 0.88);
+  color: #f5f5f5;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+.stage-empty-card .ic { width: 24px; height: 24px; color: #fbbf24; margin-bottom: 6px; }
+.stage-empty-card strong { display: block; font-size: 12.5px; margin-bottom: 3px; }
+.stage-empty-card span { font-size: 10px; color: #a3a3a3; line-height: 1.45; }
+
+.stage-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 2px 0;
+  font-size: 9.5px;
+  color: var(--fg-muted);
+}
+.lg { display: inline-flex; align-items: center; gap: 5px; }
+.lg i { width: 7px; height: 7px; border-radius: 2px; background: var(--c); flex: none; }
+.lg.p1 { --c: var(--p1); }
+.lg.p2 { --c: var(--p2); }
+.lg.p3 { --c: var(--p3); }
+.legend-hint { margin-left: auto; color: var(--fg-soft); }
+.stage.mode-result .legend-hint,
+.stage.mode-side .legend-hint { visibility: hidden; }
+
+/* ---------- table ---------- */
+.table-card {
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+.table-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 11px 13px 9px;
+}
+.table-title { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 650; }
+.count-chip {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+.table-filters { margin-left: auto; display: flex; flex-wrap: wrap; gap: 3px; }
+.filter-chip {
+  padding: 4px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.filter-chip[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: var(--accent-soft);
+}
+.table-scroll { max-height: 360px; overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  text-align: left;
+  padding: 7px 10px;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+  background: var(--header-bg);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr { cursor: pointer; transition: background-color 0.14s ease; }
+tbody tr:hover { background: var(--accent-soft); }
+tbody tr.is-selected { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+tbody tr:last-child td { border-bottom: 0; }
+.id-cell { font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-soft); white-space: nowrap; }
+.type-cell { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.type-cell[data-cls="P1"] { --c: var(--p1); }
+.type-cell[data-cls="P2"] { --c: var(--p2); }
+.type-cell[data-cls="P3"] { --c: var(--p3); }
+.type-dot { width: 7px; height: 7px; border-radius: 2px; background: var(--c); flex: none; }
+.prio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 25px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--c);
+  white-space: nowrap;
+}
+.prio[data-cls="P1"] { --c: var(--p1); color: var(--bg); }
+.prio[data-cls="P2"] { --c: var(--p2); color: #241a02; }
+.prio[data-cls="P3"] { --c: var(--p3); color: #052e1c; }
+.conf-cell { display: inline-flex; align-items: center; gap: 6px; }
+.conf-bar { width: 42px; height: 4px; border-radius: var(--r-pill); background: var(--line); overflow: hidden; flex: none; }
+.conf-bar i { display: block; height: 100%; border-radius: var(--r-pill); background: var(--c); }
+.conf-cell[data-cls="P1"] { --c: var(--p1); }
+.conf-cell[data-cls="P2"] { --c: var(--p2); }
+.conf-cell[data-cls="P3"] { --c: var(--p3); }
+.conf-num { font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.coord-cell { font-family: var(--font-mono); font-size: 9.5px; color: var(--fg-soft); white-space: nowrap; }
+.focus-cell { text-align: right; }
+.focus-btn {
+  width: 25px;
+  height: 25px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg-soft);
+  display: inline-grid;
+  place-items: center;
+}
+.focus-btn:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.focus-btn .ic { width: 12px; height: 12px; }
+.table-empty td {
+  padding: 22px 14px;
+  text-align: center;
+  color: var(--fg-soft);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.table-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 9px 13px;
+  border-top: 1px solid var(--line);
+}
+.table-foot .note { font-size: 9.5px; color: var(--fg-soft); }
+.btn-small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg-muted);
+  font-size: 9.5px;
+  font-weight: 500;
+}
+.btn-small:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.btn-small .ic { width: 12px; height: 12px; }
+
+.house-list { display: none; }
+
+/* ---------- status bar ---------- */
+.statusbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 18px;
+  padding: 8px 12px;
+  border-radius: 13px;
+  font-size: 9.5px;
+  color: var(--fg-muted);
+}
+.statusbar .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.statusbar .sep { width: 1px; height: 11px; background: var(--line); }
+.statusbar .spacer { flex: 1; }
+.statusbar .disclaimer { color: var(--fg-soft); }
+.statusbar b { color: var(--fg); font-weight: 600; }
+
+/* ---------- states ---------- */
+.state-block { display: flex; flex-direction: column; gap: 14px; }
+.state-card {
+  border-radius: var(--r-xl);
+  padding: 18px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+.empty-card {
+  min-height: 440px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 32px 24px;
+  border-style: dashed;
+  border-width: 1.5px;
+  background: var(--card);
+}
+.empty-inner { max-width: 380px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.empty-mark {
+  width: 62px;
+  height: 62px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.empty-mark .ic { width: 30px; height: 30px; }
+.empty-inner h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.empty-inner p { margin: 0; font-size: 11.5px; line-height: 1.55; color: var(--fg-muted); }
+.empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-top: 2px; }
+.empty-meta { font-size: 9.5px; color: var(--fg-soft); }
+.empty-card.dragover { border-color: var(--accent); background: var(--accent-soft); }
+
+.loading-card { min-height: 440px; display: grid; place-items: center; padding: 32px 24px; }
+.loading-inner { width: min(420px, 100%); display: flex; flex-direction: column; gap: 16px; }
+.loading-top { display: flex; align-items: center; gap: 10px; }
+.loading-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  animation: breathe 2.2s ease-in-out infinite;
+}
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.94); opacity: 0.7; } }
+.loading-top strong { display: block; font-size: 13.5px; }
+.loading-top span { display: block; font-size: 10px; color: var(--fg-muted); margin-top: 1px; }
+.progress-track { height: 6px; border-radius: var(--r-pill); background: var(--line); overflow: hidden; }
+.progress-fill {
+  height: 100%;
+  width: 42%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  animation: progress 2.6s ease-in-out infinite;
+}
+@keyframes progress {
+  0% { width: 8%; }
+  45% { width: 48%; }
+  72% { width: 74%; }
+  100% { width: 96%; }
+}
+.steps { display: flex; flex-direction: column; gap: 7px; }
+.step { display: flex; align-items: center; gap: 8px; font-size: 10.5px; color: var(--fg-soft); }
+.step .step-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  flex: none;
+}
+.step.done { color: var(--fg-muted); }
+.step.done .step-dot { color: var(--p3); border-color: var(--p3); background: var(--p3-soft); }
+.step.active { color: var(--fg); }
+.step.active .step-dot { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); animation: breathe 1.4s ease-in-out infinite; }
+.loading-note { font-size: 9.5px; color: var(--fg-soft); line-height: 1.5; }
+
+.error-card { min-height: 380px; display: grid; place-items: center; padding: 32px 24px; }
+.error-inner { max-width: 380px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.error-mark {
+  width: 54px;
+  height: 54px;
+  border-radius: 17px;
+  display: grid;
+  place-items: center;
+  color: var(--p1);
+  background: var(--p1-soft);
+  border: 1px solid color-mix(in srgb, var(--p1) 32%, transparent);
+}
+.error-mark .ic { width: 27px; height: 27px; }
+.error-inner h2 { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
+.error-inner p { margin: 0; font-size: 11.5px; line-height: 1.55; color: var(--fg-muted); }
+.error-actions { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin-top: 3px; }
+
+/* ---------- mobile action bar ---------- */
+.mobile-actions {
+  display: none;
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  gap: 7px;
+  padding: 7px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.mobile-actions .btn-secondary { flex: 0 0 auto; }
+.mobile-actions .btn-secondary.icon-only { width: 44px; flex: 0 0 44px; padding: 0; }
+.mobile-actions .btn-primary { flex: 1; width: auto; }
+
+/* ---------- toast / modal ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  z-index: 220;
+  max-width: min(92vw, 540px);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  color: var(--fg);
+  box-shadow: var(--shadow);
+  font-size: 11.5px;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, 14px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.modal-card {
+  width: min(700px, 100%);
+  max-height: min(86vh, 900px);
+  overflow: auto;
+  border-radius: 22px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+.modal-head { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+.modal-title { font-size: 16px; font-weight: 650; letter-spacing: -0.02em; }
+.modal-sub { font-size: 10px; color: var(--fg-muted); margin-top: 1px; }
+.modal-close { margin-left: auto; }
+.help-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.help-item {
+  padding: 10px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.help-item strong { display: block; font-size: 10.5px; margin-bottom: 2px; }
+.help-item span { display: block; font-size: 9.5px; color: var(--fg-muted); line-height: 1.45; }
+.help-list { margin: 0; padding-left: 18px; font-size: 10.5px; line-height: 1.7; color: var(--fg-muted); }
+.help-list b { color: var(--fg); font-weight: 600; }
+.help-note {
+  margin-top: 12px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+  font-size: 9.5px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.legend-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 2px; }
+.legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 9.5px;
+  color: var(--fg-muted);
+}
+.legend-pill i { width: 7px; height: 7px; border-radius: 2px; background: var(--c); }
+.legend-pill.p1 { --c: var(--p1); }
+.legend-pill.p2 { --c: var(--p2); }
+.legend-pill.p3 { --c: var(--p3); }
+
+.lightbox-card {
+  width: min(1240px, 100%);
+  max-height: 92vh;
+  padding: 9px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #050505;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lightbox-head { display: flex; align-items: center; gap: 8px; padding: 2px 3px; color: #f5f5f5; }
+.lightbox-head strong { font-size: 12px; font-weight: 600; }
+.lightbox-head .sub { font-size: 9.5px; color: #a3a3a3; font-family: var(--font-mono); }
+.lightbox-head .spacer { flex: 1; }
+.lightbox-head .icon-btn { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.16); color: #f5f5f5; }
+.lightbox-stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000000;
+}
+.zoom-stage {
+  position: absolute;
+  inset: 0;
+  transform: scale(var(--zoom, 1));
+  transform-origin: center center;
+  transition: transform 0.25s ease;
+}
+.zoom-stage > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.zoom-stage .boxes { position: absolute; inset: 0; }
+.lightbox-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 0 3px 2px; }
+.zoom-btn {
+  padding: 4px 7px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f5f5;
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+.zoom-btn[aria-pressed="true"] { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.62); color: #ffffff; }
+.lightbox-foot .hint { margin-left: auto; font-size: 9px; color: #737373; }
+
+/* ---------- reduced effects ---------- */
+:root[data-effects="reduced"] .glass,
+:root[data-effects="reduced"] .toast,
+:root[data-effects="reduced"] .modal-card,
+:root[data-effects="reduced"] .thumb-change,
+:root[data-effects="reduced"] .stage-label,
+:root[data-effects="reduced"] .split-handle .grip,
+:root[data-effects="reduced"] .stage-empty,
+:root[data-effects="reduced"] .mobile-actions,
+:root[data-effects="reduced"] .panel-actions {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+:root[data-effects="reduced"] .glass { background: var(--glass-strong); }
+:root[data-effects="reduced"] .blob { animation: none; opacity: 0.5; }
+:root[data-effects="reduced"] .grain { display: none; }
+:root[data-effects="reduced"] .kpi,
+:root[data-effects="reduced"] .viewer-card,
+:root[data-effects="reduced"] .table-card,
+:root[data-effects="reduced"] .panel { box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .blob { animation: none; }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1120px) {
+  .workspace { grid-template-columns: 288px minmax(0, 1fr); }
+  .gpu-pill { display: none; }
+}
+@media (max-width: 900px) {
+  body { padding-bottom: 88px; }
+  .workspace { grid-template-columns: 1fr; }
+  .results { order: -1; }
+  .panel { position: static; max-height: none; display: block; overflow: visible; }
+  .panel-scroll { overflow: visible; }
+  .mobile-actions { display: flex; }
+  .stage { width: 100%; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .status-pill .status-text { display: none; }
+  .stage-legend .legend-hint { display: none; }
+  .topbar { gap: 7px; }
+  .brand-sub { display: none; }
+}
+@media (max-width: 640px) {
+  body { font-size: 13px; }
+  .stage.mode-side .side-view { grid-template-columns: 1fr; gap: 8px; }
+  .topbar { padding: 8px; margin-top: 8px; }
+  .brand-title { font-size: 13.5px; }
+  .version { display: none; }
+  .status-pill { display: none; }
+  .demo-wrap { order: 4; margin-left: auto; }
+  .topbar .spacer { display: none; }
+  .panel { scroll-margin-top: 92px; }
+  .viewer-head { padding-right: 42px; }
+  .viewer-tools {
+    width: 100%;
+    margin-left: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .viewer-tools::-webkit-scrollbar { display: none; }
+  .viewer-tools > * { flex: none; }
+  .viewer-tools .mode-mini { order: -1; margin-left: 0; }
+  .viewer-tools #lightboxBtn { position: absolute; top: 10px; right: 10px; z-index: 5; }
+  .toggle-chip { min-height: 32px; padding: 6px 9px; }
+  .mode-mini button { min-height: 30px; padding: 6px 8px; }
+  .filter-chip { min-height: 30px; padding: 5px 9px; }
+  .preset { min-height: 44px; }
+  .seg button { min-height: 38px; }
+  .kpi { padding: 10px 11px 9px; }
+  .kpi-value { font-size: 26px; }
+  .kpi-label { font-size: 8px; }
+  .kpi-sub { font-size: 8.5px; }
+  .table-scroll { display: none; }
+  .house-list { display: flex; flex-direction: column; gap: 6px; padding: 0 10px 10px; }
+  .house-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 11px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    text-align: left;
+  }
+  .house-card:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+  .house-card .hc-main { flex: 1; min-width: 0; }
+  .house-card .hc-title { display: block; font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .house-card .hc-meta { display: block; font-size: 9px; color: var(--fg-soft); font-family: var(--font-mono); margin-top: 1px; }
+  .house-card .ic { width: 14px; height: 14px; color: var(--fg-soft); flex: none; }
+  .table-filters { margin-left: 0; }
+  .table-head { gap: 6px; }
+  .empty-card, .loading-card, .error-card { min-height: 360px; }
+  .help-grid { grid-template-columns: 1fr; }
+  .modal { padding: 10px; }
+  .modal-card { padding: 14px; max-height: 90vh; }
+  .lightbox-card { max-height: 94vh; }
+  .statusbar { font-size: 8.5px; gap: 6px; }
+  .statusbar .disclaimer { display: none; }
+}
+@media (max-width: 420px) {
+  .kpis { gap: 7px; }
+  .kpi-icon { width: 24px; height: 24px; }
+  .kpi-value { font-size: 24px; }
+  .viewer-title strong { font-size: 11.5px; }
+  .toggle-chip { font-size: 8.5px; padding: 3px 6px; }
+  .mode-mini button { font-size: 8.5px; padding: 3px 5px; }
+}
+</style>
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("nn-theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+})();
+</script>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
+  <symbol id="i-flood-house" viewBox="0 0 24 24">
+    <path d="M3 11.2 12 4l9 7.2"/>
+    <path d="M5.5 10.4V19h13v-8.6"/>
+    <path d="M9.6 19v-4.4h4.8V19"/>
+    <path d="M2.2 21.4c1.8-1.3 3.3-1.3 5.1 0 1.8 1.3 3.3 1.3 5.1 0 1.8-1.3 3.3-1.3 5.1 0 1.3 0.9 2.5 1.2 3.9 0.6"/>
+  </symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 21 19H3z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-half" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 16 9 5 9-5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-.9.6-1.5 1.1-1.5 2.5"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m8 8 4-4 4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15-5-5L5 21"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12"/><path d="m8 12 4 4 4-4"/><path d="M4 20h16"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-crosshair" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0"/><path d="M2 17c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0"/></symbol>
+</svg>
+
+<div class="ambient" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="grain"></span>
+</div>
+
+<div class="app">
+  <header class="topbar glass">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg class="ic"><use href="#i-flood-house"/></svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-line">
+          <span class="brand-title">Nhận diện Nhà Ngập</span>
+          <span class="version">v0.0.2</span>
+        </div>
+        <div class="brand-sub">Hỗ trợ cứu hộ lũ · ảnh trên không</div>
+      </div>
+    </div>
+
+    <span class="spacer"></span>
+
+    <span class="status-pill" title="Cascade R-CNN + ConvNeXt-Tiny đã nạp">
+      <i class="dot"></i>
+      <span class="status-text">Model sẵn sàng</span>
+    </span>
+    <span class="gpu-pill">RTX 3050 Ti</span>
+
+    <label class="demo-wrap" title="Chuyển trạng thái để xem các màn hình">
+      <span class="demo-badge">DEMO</span>
+      <select id="stateSelect" aria-label="Xem trạng thái giao diện">
+        <option value="result">Kết quả</option>
+        <option value="loading">Đang phân tích</option>
+        <option value="empty">Chưa có ảnh</option>
+        <option value="error">Lỗi xử lý</option>
+      </select>
+    </label>
+
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Chuyển chế độ sáng tối" title="Chuyển sáng / tối">
+      <svg class="ic" id="themeIcon"><use href="#i-sun"/></svg>
+    </button>
+    <button class="icon-btn" id="effectsBtn" type="button" aria-pressed="false" aria-label="Giảm hiệu ứng nền và kính mờ" title="Giảm hiệu ứng">
+      <svg class="ic"><use href="#i-sparkles"/></svg>
+    </button>
+    <button class="icon-btn" id="helpBtn" type="button" aria-label="Hướng dẫn xem bản thử" title="Hướng dẫn">
+      <svg class="ic"><use href="#i-help"/></svg>
+    </button>
+  </header>
+
+  <main class="workspace" id="workspace">
+    <!-- ============ LEFT CONTROLS ============ -->
+    <aside class="panel glass" aria-label="Điều khiển phân tích">
+      <div class="panel-scroll">
+      <div class="panel-section">
+        <div class="section-label">
+          <svg class="ic"><use href="#i-image"/></svg>
+          Ảnh đầu vào
+        </div>
+
+        <div class="thumb" id="thumb">
+          <img id="thumbImg" src="flood.jpg" alt="Ảnh mái nhà ngập lụt nhìn từ trên cao">
+          <button class="thumb-change" id="changeBtn" type="button">Đổi ảnh</button>
+          <div class="thumb-meta">
+            <span class="thumb-name" id="thumbName">ngap-nha-trangtran-minh-1.jpg</span>
+            <span class="thumb-dim" id="thumbDim">640 × 480</span>
+          </div>
+          <div class="thumb-empty" id="thumbEmpty" hidden>
+            <svg class="ic"><use href="#i-upload"/></svg>
+            <span>Chưa có ảnh</span>
+          </div>
+        </div>
+
+        <div class="file-line">
+          <span>Ảnh mẫu · dữ liệu minh hoạ</span>
+          <span class="mono">101 KB</span>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-label">
+          <svg class="ic"><use href="#i-settings"/></svg>
+          Tuỳ chọn
+        </div>
+
+        <div class="seg" role="group" aria-label="Mức độ tuỳ chỉnh">
+          <button type="button" id="modeBasic" aria-pressed="true">Cơ bản</button>
+          <button type="button" id="modeAdvanced" aria-pressed="false">Nâng cao</button>
+        </div>
+
+        <div id="basicBlock">
+          <div class="presets" role="group" aria-label="Mức nhạy phát hiện">
+            <button class="preset" type="button" data-threshold="0.40" aria-pressed="false">
+              <strong>Ít nhiễu</strong>
+              <span class="conf">0,40</span>
+            </button>
+            <button class="preset" type="button" data-threshold="0.30" aria-pressed="true">
+              <strong>Cân bằng</strong>
+              <span class="conf">0,30</span>
+            </button>
+            <button class="preset" type="button" data-threshold="0.20" aria-pressed="false">
+              <strong>Bắt nhiều</strong>
+              <span class="conf">0,20</span>
+            </button>
+          </div>
+          <div class="threshold-line" style="margin-top:9px">
+            <span>Ngưỡng <b class="js-threshold">0,30</b></span>
+            <span><b class="js-total">18</b> nhà <em class="threshold-delta" id="thresholdDelta">· mặc định</em></span>
+          </div>
+          <button class="link-btn" id="customThreshold" type="button" style="margin-top:5px">Tùy chỉnh ngưỡng →</button>
+        </div>
+
+        <div class="advanced" id="advancedBlock" hidden>
+          <div class="advanced-note">
+            Ngưỡng tin cậy lọc <b>tức thì</b> trên kết quả đã có. Các tham số còn lại chỉ áp dụng khi chạy lại model.
+          </div>
+
+          <div class="field-row">
+            <div>
+              <div class="label">Ngưỡng tin cậy</div>
+              <div class="hint">Thấp hơn: bắt nhiều nhà, dễ nhận nhầm.</div>
+            </div>
+            <span class="range-val js-threshold">0,30</span>
+          </div>
+          <input type="range" id="thresholdRange" min="0.10" max="0.90" step="0.01" value="0.30" aria-label="Ngưỡng tin cậy">
+
+          <div class="switch-row">
+            <div class="switch-copy">
+              <div class="label">Chia lát ảnh lớn</div>
+              <div class="hint">Giữ nhà nhỏ trong ảnh lớn.</div>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="true" id="tilingSwitch" aria-label="Chia lát ảnh lớn"></button>
+          </div>
+
+          <div class="field-row">
+            <div>
+              <div class="label">Kích thước lát</div>
+              <div class="hint">896 px là mặc định.</div>
+            </div>
+            <input class="number-input" id="tileSize" type="number" min="512" max="1280" step="64" value="896" aria-label="Kích thước lát">
+          </div>
+
+          <div class="switch-row">
+            <div class="switch-copy">
+              <div class="label">Gộp nhà nhiều tầng</div>
+              <div class="hint">Gộp box chồng dọc thành một căn.</div>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="true" id="mergeSwitch" aria-label="Gộp nhà nhiều tầng"></button>
+          </div>
+
+          <div class="field-row">
+            <div>
+              <div class="label">IoU khử trùng lặp</div>
+              <div class="hint">0,50 là mặc định.</div>
+            </div>
+            <input class="number-input" id="iouInput" type="number" min="0.30" max="0.80" step="0.05" value="0.50" aria-label="IoU khử trùng lặp">
+          </div>
+
+          <div class="field-row">
+            <div>
+              <div class="label">Cạnh tối thiểu</div>
+              <div class="hint">Bỏ box nhỏ hơn 20 px.</div>
+            </div>
+            <input class="number-input" id="minSide" type="number" min="8" max="64" step="2" value="20" aria-label="Cạnh tối thiểu">
+          </div>
+
+          <div class="switch-row">
+            <div class="switch-copy">
+              <div class="label">TTA lật ngang</div>
+              <div class="hint">Chậm hơn, đôi khi bắt tốt hơn.</div>
+            </div>
+            <button class="switch" type="button" role="switch" aria-checked="false" id="ttaSwitch" aria-label="TTA lật ngang"></button>
+          </div>
+
+          <div class="field-row" style="align-items:flex-start;flex-direction:column;gap:5px">
+            <div>
+              <div class="label">Checkpoint detector</div>
+              <div class="hint">Đổi checkpoint sẽ nạp lại model (10–25 giây).</div>
+            </div>
+            <select class="select" id="checkpointSelect" aria-label="Checkpoint detector">
+              <option value="best_ep4">Bản tốt nhất · mAP 0.3130 · epoch 4</option>
+              <option value="aug_ep20">Bản aug đủ 20 epoch</option>
+              <option value="khong_aug_ep20">Bản cũ không aug</option>
+            </select>
+          </div>
+
+          <button class="link-btn" id="resetAdvanced" type="button" style="margin-top:4px">Khôi phục mặc định</button>
+        </div>
+      </div>
+
+      </div>
+      <div class="panel-section panel-actions">
+        <button class="btn-primary" id="analyzeBtn" type="button">
+          <svg class="ic"><use href="#i-refresh"/></svg>
+          <span class="btn-label">Phân tích lại</span>
+        </button>
+        <div class="btn-row">
+          <button class="btn-secondary" id="exportBtn" type="button">
+            <svg class="ic"><use href="#i-download"/></svg>
+            Xuất kết quả
+          </button>
+          <button class="btn-secondary" id="helpBtn2" type="button">
+            <svg class="ic"><use href="#i-info"/></svg>
+            Cách đọc
+          </button>
+        </div>
+        <div class="model-note">
+          <i class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--p3);box-shadow:0 0 0 3px var(--p3-soft);flex:none"></i>
+          <div class="txt">
+            <b>Cascade R-CNN → ConvNeXt-Tiny</b><br>
+            mAP 0.3130 · epoch 4 · kết quả chỉ hỗ trợ ra quyết định.
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ RESULTS ============ -->
+    <section class="results" aria-label="Kết quả phân tích">
+      <!-- RESULT STATE -->
+      <div id="resultBlock">
+        <div class="kpis" id="kpis" role="group" aria-label="Thống kê theo mức ưu tiên">
+          <button class="kpi" type="button" data-cls="P1" data-filter="P1" aria-pressed="false" title="Lọc nhà ngập hoàn toàn">
+            <span class="kpi-top">
+              <span class="kpi-icon"><svg class="ic"><use href="#i-alert"/></svg></span>
+              <span class="kpi-label">Ngập<br>hoàn toàn</span>
+            </span>
+            <span class="kpi-value" id="countP1">7</span>
+            <span class="kpi-sub" id="subP1">39% · cần cứu trước</span>
+          </button>
+          <button class="kpi" type="button" data-cls="P2" data-filter="P2" aria-pressed="false" title="Lọc nhà ngập một phần">
+            <span class="kpi-top">
+              <span class="kpi-icon"><svg class="ic"><use href="#i-half"/></svg></span>
+              <span class="kpi-label">Ngập<br>một phần</span>
+            </span>
+            <span class="kpi-value" id="countP2">8</span>
+            <span class="kpi-sub" id="subP2">44% · ưu tiên 2</span>
+          </button>
+          <button class="kpi" type="button" data-cls="P3" data-filter="P3" aria-pressed="false" title="Lọc nhà không ngập">
+            <span class="kpi-top">
+              <span class="kpi-icon"><svg class="ic"><use href="#i-check"/></svg></span>
+              <span class="kpi-label">Không<br>ngập</span>
+            </span>
+            <span class="kpi-value" id="countP3">3</span>
+            <span class="kpi-sub" id="subP3">17% · theo dõi</span>
+          </button>
+          <button class="kpi" type="button" data-cls="all" data-filter="all" aria-pressed="true" title="Bỏ bộ lọc">
+            <span class="kpi-top">
+              <span class="kpi-icon"><svg class="ic"><use href="#i-layers"/></svg></span>
+              <span class="kpi-label">Tổng<br>phát hiện</span>
+            </span>
+            <span class="kpi-value" id="countTotal">18</span>
+            <span class="kpi-sub">trên ảnh hiện tại</span>
+          </button>
+        </div>
+
+        <div class="ratio" style="margin-top:10px">
+          <span class="ratio-label">Tỷ lệ</span>
+          <div class="ratio-bar" id="ratioBar" aria-hidden="true">
+            <span class="ratio-seg p1" id="segP1"></span>
+            <span class="ratio-seg p2" id="segP2"></span>
+            <span class="ratio-seg p3" id="segP3"></span>
+          </div>
+          <span class="ratio-text" id="ratioText">7 · 8 · 3</span>
+        </div>
+
+        <div class="viewer-card glass" style="margin-top:14px">
+          <div class="viewer-head">
+            <div class="viewer-title">
+              <strong>Ảnh đã nhận diện</strong>
+              <span>ngưỡng <span class="js-threshold">0,30</span></span>
+            </div>
+
+            <span class="selected-info" id="selectedInfo" hidden>
+              <span id="selectedText">#05 · P2 · 0,67</span>
+              <button type="button" id="clearSelected" aria-label="Bỏ chọn nhà">
+                <svg class="ic" style="width:10px;height:10px"><use href="#i-x"/></svg>
+              </button>
+            </span>
+
+            <div class="viewer-tools">
+              <button class="toggle-chip" type="button" id="tgBoxes" aria-pressed="true">Box</button>
+              <button class="toggle-chip" type="button" id="tgLabels" aria-pressed="true">Nhãn</button>
+              <button class="toggle-chip" type="button" id="tgConf" aria-pressed="true">Tin cậy</button>
+              <button class="toggle-chip" type="button" id="tgP1" aria-pressed="false">Chỉ P1</button>
+              <div class="mode-mini" role="group" aria-label="Cách xem ảnh">
+                <button type="button" id="modeResult" aria-pressed="true">Kết quả</button>
+                <button type="button" id="modeCompare" aria-pressed="false">So sánh</button>
+                <button type="button" id="modeSide" aria-pressed="false">Cạnh nhau</button>
+              </div>
+              <button class="icon-btn" type="button" id="lightboxBtn" aria-label="Mở ảnh lớn" title="Mở ảnh lớn" style="width:31px;height:31px;border-radius:9px">
+                <svg class="ic" style="width:14px;height:14px"><use href="#i-expand"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="stage-wrap">
+            <div class="stage mode-result" id="stage">
+              <img class="base" src="flood.jpg" alt="Ảnh gốc nhà ngập nhìn từ trên cao">
+              <div class="after-layer" id="afterLayer">
+                <img src="flood.jpg" alt="">
+                <div class="boxes" id="boxes" data-filter="all"></div>
+              </div>
+              <div class="side-view" id="sideView">
+                <div class="side-pane">
+                  <div class="side-frame">
+                    <img src="flood.jpg" alt="Ảnh gốc trước khi quét">
+                  </div>
+                  <div class="side-caption">
+                    <strong>Trước khi quét</strong>
+                    <span>Ảnh gốc</span>
+                  </div>
+                </div>
+                <div class="side-pane">
+                  <div class="side-frame">
+                    <img src="flood.jpg" alt="">
+                    <div class="boxes" id="sideBoxes"></div>
+                    <div class="side-empty" id="sideEmpty" hidden>Không có nhà vượt ngưỡng này</div>
+                  </div>
+                  <div class="side-caption">
+                    <strong>Sau khi quét</strong>
+                    <span>Kết quả nhận diện</span>
+                  </div>
+                </div>
+              </div>
+              <button class="split-handle" id="splitHandle" type="button" role="slider" aria-label="Kéo để so sánh ảnh gốc và kết quả" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+                <span class="grip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-chevron-left"/></svg>
+                  <svg class="ic"><use href="#i-chevron-right"/></svg>
+                </span>
+              </button>
+              <div class="stage-labels" aria-hidden="true">
+                <span class="stage-label label-original">Ảnh gốc</span>
+                <span class="stage-label label-result">Kết quả nhận diện</span>
+              </div>
+              <div class="stage-empty" id="stageEmpty" hidden>
+                <div class="stage-empty-card">
+                  <svg class="ic"><use href="#i-alert"/></svg>
+                  <strong>Không có nhà vượt ngưỡng này</strong>
+                  <span>Hạ ngưỡng tin cậy hoặc chọn mức “Bắt nhiều” để xem thêm. Kết quả sẽ cập nhật ngay, không cần chạy lại model.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-legend">
+            <span class="lg p1"><i></i> P1 · Ngập hoàn toàn</span>
+            <span class="lg p2"><i></i> P2 · Ngập một phần</span>
+            <span class="lg p3"><i></i> P3 · Không ngập</span>
+            <span class="legend-hint">Kéo thanh giữa để so sánh với ảnh gốc</span>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:14px">
+          <div class="table-head">
+            <span class="table-title">
+              <svg class="ic" style="width:14px;height:14px"><use href="#i-table"/></svg>
+              Danh sách nhà
+              <span class="count-chip" id="tableCount">18</span>
+            </span>
+            <div class="table-filters" role="group" aria-label="Lọc danh sách">
+              <button class="filter-chip" type="button" data-filter="all" aria-pressed="true">Tất cả</button>
+              <button class="filter-chip" type="button" data-filter="P1" aria-pressed="false">P1</button>
+              <button class="filter-chip" type="button" data-filter="P2" aria-pressed="false">P2</button>
+              <button class="filter-chip" type="button" data-filter="P3" aria-pressed="false">P3</button>
+            </div>
+          </div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Loại</th>
+                  <th scope="col">Ưu tiên</th>
+                  <th scope="col">Tin cậy</th>
+                  <th scope="col">Toạ độ (px)</th>
+                  <th scope="col"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Xem trên ảnh</span></th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="house-list" id="houseList"></div>
+
+          <div class="table-foot">
+            <span class="note">Bấm một dòng để đánh dấu trên ảnh · dữ liệu minh hoạ</span>
+            <div style="display:flex;gap:5px;flex-wrap:wrap">
+              <button class="btn-small" type="button" data-export="csv"><svg class="ic"><use href="#i-download"/></svg>CSV</button>
+              <button class="btn-small" type="button" data-export="png"><svg class="ic"><use href="#i-image"/></svg>Ảnh</button>
+              <button class="btn-small" type="button" data-export="pdf"><svg class="ic"><use href="#i-download"/></svg>Báo cáo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="state-block" id="emptyBlock" hidden>
+        <div class="state-card empty-card" id="dropZone">
+          <div class="empty-inner">
+            <div class="empty-mark">
+              <svg class="ic"><use href="#i-flood-house"/></svg>
+            </div>
+            <h2>Kéo ảnh vào đây để bắt đầu</h2>
+            <p>Hệ thống tự tìm từng căn nhà, tô màu theo mức ngập và xếp thứ tự cứu hộ. Ảnh càng rõ, kết quả càng chắc.</p>
+            <div class="empty-actions">
+              <button class="btn-primary" type="button" id="emptyPick" style="width:auto;padding:10px 14px">
+                <svg class="ic"><use href="#i-upload"/></svg>
+                Chọn ảnh
+              </button>
+              <button class="btn-secondary" type="button" id="emptyCamera">
+                <svg class="ic"><use href="#i-camera"/></svg>
+                Chụp ảnh
+              </button>
+              <button class="btn-secondary" type="button" id="emptySample">
+                <svg class="ic"><use href="#i-image"/></svg>
+                Dùng ảnh mẫu
+              </button>
+            </div>
+            <span class="empty-meta">JPG, PNG, WEBP, BMP, TIF · tối đa 20 MB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div class="state-block" id="loadingBlock" hidden>
+        <div class="state-card loading-card">
+          <div class="loading-inner">
+            <div class="loading-top">
+              <div class="loading-mark">
+                <svg class="ic"><use href="#i-wave"/></svg>
+              </div>
+              <div>
+                <strong>Đang phân tích ảnh</strong>
+                <span>Model đang tìm nhà và phân loại mức ngập.</span>
+              </div>
+            </div>
+
+            <div class="progress-track"><div class="progress-fill"></div></div>
+
+            <div class="steps">
+              <div class="step done">
+                <span class="step-dot">1</span>
+                <span>Tìm nhà · Cascade R-CNN</span>
+              </div>
+              <div class="step active">
+                <span class="step-dot">2</span>
+                <span>Phân loại mức ngập · ConvNeXt-Tiny</span>
+              </div>
+              <div class="step">
+                <span class="step-dot">3</span>
+                <span>Gộp box &amp; xếp ưu tiên</span>
+              </div>
+            </div>
+
+            <p class="loading-note">Lần đầu nạp model có thể mất 10–25 giây. Các lần sau nhanh hơn. Bạn có thể rời trang, kết quả vẫn được giữ.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div class="state-block" id="errorBlock" hidden>
+        <div class="state-card error-card">
+          <div class="error-inner">
+            <div class="error-mark">
+              <svg class="ic"><use href="#i-alert"/></svg>
+            </div>
+            <h2>Không thể phân tích ảnh</h2>
+            <p id="errorMessage">Thử lại hoặc chọn ảnh khác.</p>
+            <div class="error-actions">
+              <button class="btn-primary" type="button" id="errorRetry" style="width:auto;padding:9px 14px">
+                <svg class="ic"><use href="#i-refresh"/></svg>
+                Thử lại
+              </button>
+              <button class="btn-secondary" type="button" id="errorPick">
+                <svg class="ic"><use href="#i-upload"/></svg>
+                Chọn ảnh khác
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-actions">
+    <button class="btn-secondary icon-only" type="button" id="mobileSettings" aria-label="Mở tuỳ chọn phân tích" title="Tuỳ chọn">
+      <svg class="ic"><use href="#i-settings"/></svg>
+    </button>
+    <button class="btn-secondary" type="button" id="mobilePick">
+      <svg class="ic"><use href="#i-upload"/></svg>
+      Chọn ảnh
+    </button>
+    <button class="btn-primary" type="button" id="mobileAnalyze">
+      <svg class="ic"><use href="#i-refresh"/></svg>
+      Phân tích
+    </button>
+  </div>
+
+  <footer class="statusbar glass">
+    <span class="mono" id="statusTime">3,87s</span>
+    <span class="sep"></span>
+    <span class="mono" id="statusDim">640×480</span>
+    <span class="sep"></span>
+    <span>Cascade R-CNN + ConvNeXt-Tiny</span>
+    <span class="sep"></span>
+    <span>conf <b class="js-threshold">0,30</b></span>
+    <span class="sep"></span>
+    <span><b class="js-total">18</b> nhà</span>
+    <span class="spacer"></span>
+    <span class="disclaimer">Bản mockup · dữ liệu minh hoạ từ ảnh mẫu</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="modal" id="helpModal" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="helpTitle">Cách xem bản thử</div>
+        <div class="modal-sub">Bản mockup tương tác · không phải app thật</div>
+      </div>
+      <button class="icon-btn modal-close" type="button" data-close="helpModal" aria-label="Đóng hướng dẫn">
+        <svg class="ic"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <div class="legend-grid">
+      <span class="legend-pill p1"><i></i> P1 · Ngập hoàn toàn · cứu trước</span>
+      <span class="legend-pill p2"><i></i> P2 · Ngập một phần · ưu tiên 2</span>
+      <span class="legend-pill p3"><i></i> P3 · Không ngập · theo dõi</span>
+    </div>
+
+    <div class="help-grid">
+      <div class="help-item">
+        <strong>Đổi ngưỡng</strong>
+        <span>Bấm “Cân bằng / Bắt nhiều / Ít nhiễu” hoặc mở Nâng cao để kéo thanh. Số nhà và box đổi ngay.</span>
+      </div>
+      <div class="help-item">
+        <strong>Lọc theo ưu tiên</strong>
+        <span>Bấm thẻ P1/P2/P3 hoặc chip trong bảng. Bấm lại để bỏ lọc.</span>
+      </div>
+      <div class="help-item">
+        <strong>So sánh ảnh</strong>
+        <span>Chọn “So sánh” để kéo thanh giữa, hoặc “Cạnh nhau” để xem ảnh gốc bên trái và kết quả bên phải.</span>
+      </div>
+      <div class="help-item">
+        <strong>Xem từng nhà</strong>
+        <span>Bấm một dòng trong bảng để đánh dấu box tương ứng trên ảnh.</span>
+      </div>
+      <div class="help-item">
+        <strong>Sáng / tối</strong>
+        <span>Nút mặt trời / mặt trăng ở góc phải. Ảnh luôn nằm trên nền tối để dễ nhìn box.</span>
+      </div>
+      <div class="help-item">
+        <strong>Giảm hiệu ứng</strong>
+        <span>Nút lấp lánh tắt kính mờ và giảm chuyển động nền — dùng khi máy yếu hoặc cần tương phản cao hơn.</span>
+      </div>
+    </div>
+
+    <ul class="help-list">
+      <li>Menu <b>DEMO</b> đổi giữa bốn trạng thái: kết quả, đang phân tích, chưa có ảnh, lỗi.</li>
+      <li>Nút <b>Phân tích lại</b> mô phỏng 1,8 giây xử lý rồi trả về kết quả.</li>
+      <li>Nút <b>Xuất</b> chỉ hiển thị thông báo — bản mockup chưa nối chức năng tải file.</li>
+    </ul>
+
+    <div class="help-note">
+      Dữ liệu và box là minh hoạ trên ảnh mẫu, không phải kết quả thật của model. Model thật: Cascade R-CNN + ConvNeXt-Tiny, mAP 0.3130 — kết quả chỉ hỗ trợ ra quyết định, không thay thế khảo sát thực địa.
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="lightboxModal" hidden role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+  <div class="lightbox-card">
+    <div class="lightbox-head">
+      <strong id="lightboxTitle">Ảnh đã nhận diện</strong>
+      <span class="sub" id="lightboxSub">ngưỡng 0,30 · 18 nhà</span>
+      <span class="spacer"></span>
+      <button class="icon-btn" type="button" data-close="lightboxModal" aria-label="Đóng ảnh lớn" style="width:30px;height:30px;border-radius:9px">
+        <svg class="ic" style="width:14px;height:14px"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="lightbox-stage">
+      <div class="zoom-stage" id="zoomStage" style="--zoom:1">
+        <img src="flood.jpg" alt="Ảnh nhà ngập phóng to">
+        <div class="boxes" id="lightboxBoxes"></div>
+      </div>
+    </div>
+    <div class="lightbox-foot">
+      <button class="zoom-btn" type="button" data-zoom="1" aria-pressed="true">1×</button>
+      <button class="zoom-btn" type="button" data-zoom="1.5" aria-pressed="false">1,5×</button>
+      <button class="zoom-btn" type="button" data-zoom="2" aria-pressed="false">2×</button>
+      <span class="hint">Thu phóng quanh tâm ảnh · dữ liệu minh hoạ</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- sample detections (percent coordinates on the 4:3 image) ---------- */
+  var HOUSES = [
+    { id: 1,  cls: "P1", conf: 0.59, x: 62.5, y: 1.0,  w: 11.0, h: 13.0 },
+    { id: 2,  cls: "P1", conf: 0.53, x: 3.1,  y: 7.3,  w: 5.5,  h: 8.3  },
+    { id: 3,  cls: "P1", conf: 0.43, x: 26.6, y: 14.6, w: 7.0,  h: 10.4 },
+    { id: 4,  cls: "P1", conf: 0.33, x: 14.8, y: 19.8, w: 5.5,  h: 9.4  },
+    { id: 5,  cls: "P1", conf: 0.67, x: 79.7, y: 56.3, w: 9.4,  h: 13.5 },
+    { id: 6,  cls: "P1", conf: 0.38, x: 33.6, y: 74.0, w: 4.7,  h: 8.3  },
+    { id: 7,  cls: "P1", conf: 0.42, x: 84.4, y: 76.0, w: 7.8,  h: 11.5 },
+    { id: 8,  cls: "P2", conf: 0.56, x: 53.1, y: 16.7, w: 12.5, h: 13.5 },
+    { id: 9,  cls: "P2", conf: 0.59, x: 0.0,  y: 19.8, w: 9.4,  h: 19.8 },
+    { id: 10, cls: "P2", conf: 0.81, x: 15.6, y: 40.6, w: 17.2, h: 14.6 },
+    { id: 11, cls: "P2", conf: 0.34, x: 70.3, y: 53.1, w: 6.3,  h: 18.8 },
+    { id: 12, cls: "P2", conf: 0.48, x: 83.6, y: 88.5, w: 8.6,  h: 10.4 },
+    { id: 13, cls: "P2", conf: 0.45, x: 60.9, y: 19.8, w: 9.4,  h: 19.8 },
+    { id: 14, cls: "P2", conf: 0.46, x: 23.4, y: 20.8, w: 9.4,  h: 12.5 },
+    { id: 15, cls: "P2", conf: 0.35, x: 9.4,  y: 31.3, w: 6.3,  h: 10.4 },
+    { id: 16, cls: "P2", conf: 0.27, x: 46.9, y: 81.3, w: 6.3,  h: 8.3  },
+    { id: 17, cls: "P3", conf: 0.64, x: 46.9, y: 12.5, w: 7.8,  h: 10.4 },
+    { id: 18, cls: "P3", conf: 0.65, x: 37.5, y: 35.4, w: 14.1, h: 16.7 },
+    { id: 19, cls: "P3", conf: 0.66, x: 74.2, y: 11.5, w: 7.0,  h: 10.4 },
+    { id: 20, cls: "P3", conf: 0.24, x: 92.2, y: 62.5, w: 5.5,  h: 10.4 }
+  ];
+
+  var LABEL = {
+    P1: "Ngập hoàn toàn",
+    P2: "Ngập một phần",
+    P3: "Không ngập"
+  };
+  var PRIO = { P1: 0, P2: 1, P3: 2 };
+
+  var state = {
+    threshold: 0.30,
+    filter: "all",
+    selectedId: null,
+    mode: "result",
+    split: 50,
+    showBoxes: true,
+    showLabels: true,
+    showConf: true,
+    p1Only: false,
+    appState: "result",
+    loadingTimer: null,
+    currentFile: null
+  };
+
+  var $ = function (sel, root) { return (root || document).querySelector(sel); };
+  var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+  function fmt(n) {
+    return Number(n).toFixed(2).replace(".", ",");
+  }
+
+  function visibleByThreshold() {
+    return HOUSES.filter(function (h) { return h.conf >= state.threshold - 1e-9; });
+  }
+
+  function countByClass(arr) {
+    var c = { P1: 0, P2: 0, P3: 0, total: 0 };
+    arr.forEach(function (h) { c[h.cls] += 1; c.total += 1; });
+    return c;
+  }
+
+  function displayedHouses() {
+    var arr = visibleByThreshold();
+    if (state.filter !== "all") {
+      arr = arr.filter(function (h) { return h.cls === state.filter; });
+    }
+    return arr.slice().sort(function (a, b) {
+      return PRIO[a.cls] - PRIO[b.cls] || b.conf - a.conf || a.id - b.id;
+    });
+  }
+
+  function px(v, total) {
+    return Math.round((v / 100) * total);
+  }
+
+  function coords(h) {
+    return px(h.x, 640) + ", " + px(h.y, 480) + ", " + px(h.w, 640) + ", " + px(h.h, 480);
+  }
+
+  function pad2(n) {
+    return String(n).length < 2 ? "0" + n : String(n);
+  }
+
+  function setText(sel, text) {
+    $$(sel).forEach(function (el) { el.textContent = text; });
+  }
+
+  /* ---------- toast ---------- */
+  var toastTimer = null;
+  function toast(msg) {
+    var el = $("#toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
+  }
+
+  /* ---------- theme ---------- */
+  function effectiveTheme() {
+    var explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") return explicit;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function syncThemeIcon() {
+    var icon = $("#themeIcon use");
+    if (!icon) return;
+    icon.setAttribute("href", effectiveTheme() === "dark" ? "#i-sun" : "#i-moon");
+  }
+
+  function toggleTheme() {
+    var next = effectiveTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("nn-theme", next); } catch (e) {}
+    syncThemeIcon();
+  }
+
+  /* ---------- effects toggle ---------- */
+  function toggleEffects() {
+    var btn = $("#effectsBtn");
+    var reduced = document.documentElement.getAttribute("data-effects") === "reduced";
+    if (reduced) {
+      document.documentElement.removeAttribute("data-effects");
+      btn.setAttribute("aria-pressed", "false");
+      toast("Đã bật lại hiệu ứng nền và kính mờ.");
+    } else {
+      document.documentElement.setAttribute("data-effects", "reduced");
+      btn.setAttribute("aria-pressed", "true");
+      toast("Đã giảm hiệu ứng: nền tĩnh, bề mặt đặc hơn.");
+    }
+  }
+
+  /* ---------- render: KPIs + ratio ---------- */
+  function animateKpis() {
+    $$(".kpi").forEach(function (card) {
+      card.classList.remove("pop");
+      void card.offsetWidth;
+      card.classList.add("pop");
+      setTimeout(function () { card.classList.remove("pop"); }, 340);
+    });
+  }
+
+  function renderKpis(c, animate) {
+    $("#countP1").textContent = c.P1;
+    $("#countP2").textContent = c.P2;
+    $("#countP3").textContent = c.P3;
+    $("#countTotal").textContent = c.total;
+
+    var p1 = c.total ? Math.round((c.P1 / c.total) * 100) : 0;
+    var p2 = c.total ? Math.round((c.P2 / c.total) * 100) : 0;
+    var p3 = c.total ? Math.max(0, 100 - p1 - p2) : 0;
+
+    $("#subP1").textContent = p1 + "% · cần cứu trước";
+    $("#subP2").textContent = p2 + "% · ưu tiên 2";
+    $("#subP3").textContent = p3 + "% · theo dõi";
+
+    var segs = [[$("#segP1"), c.P1], [$("#segP2"), c.P2], [$("#segP3"), c.P3]];
+    segs.forEach(function (pair) {
+      var el = pair[0];
+      var n = pair[1];
+      el.style.width = c.total ? (n / c.total * 100) + "%" : "0%";
+    });
+    $("#ratioText").textContent = c.P1 + " · " + c.P2 + " · " + c.P3;
+
+    $$(".kpi").forEach(function (card) {
+      var f = card.getAttribute("data-filter");
+      card.setAttribute("aria-pressed", f === state.filter ? "true" : "false");
+    });
+    $$(".filter-chip").forEach(function (chip) {
+      chip.setAttribute("aria-pressed", chip.getAttribute("data-filter") === state.filter ? "true" : "false");
+    });
+
+    if (animate) animateKpis();
+  }
+
+  /* ---------- render: boxes ---------- */
+  function renderBoxes(container, houses, interactive) {
+    if (!container) return;
+    container.innerHTML = "";
+    houses.forEach(function (h) {
+      var b = document.createElement(interactive ? "button" : "div");
+      b.className = "box" + (h.y < 8 ? " tag-inside" : "") + (h.id === state.selectedId ? " is-selected" : "");
+      b.style.left = h.x + "%";
+      b.style.top = h.y + "%";
+      b.style.width = h.w + "%";
+      b.style.height = h.h + "%";
+      b.setAttribute("data-id", h.id);
+      b.setAttribute("data-cls", h.cls);
+      var label = h.cls + " · " + fmt(h.conf);
+      b.innerHTML = '<span class="tag"><i></i>' + h.cls + '<span class="conf"> · ' + fmt(h.conf) + '</span></span>';
+      b.setAttribute("aria-label", "Nhà #" + pad2(h.id) + " · " + LABEL[h.cls] + " · tin cậy " + fmt(h.conf));
+      if (interactive) {
+        b.type = "button";
+        b.addEventListener("mouseenter", function () { setRowHover(h.id, true); });
+        b.addEventListener("mouseleave", function () { setRowHover(h.id, false); });
+        b.addEventListener("click", function (e) { e.stopPropagation(); selectHouse(h.id); });
+      } else {
+        b.setAttribute("aria-hidden", "true");
+      }
+      container.appendChild(b);
+    });
+    applyBoxClasses();
+  }
+
+  function applyBoxClasses() {
+    ["#boxes", "#sideBoxes", "#lightboxBoxes"].forEach(function (sel) {
+      var boxes = $(sel);
+      if (!boxes) return;
+      boxes.classList.toggle("is-hidden", !state.showBoxes);
+      boxes.classList.toggle("labels-off", !state.showLabels);
+      boxes.classList.toggle("conf-off", !state.showConf);
+      boxes.classList.toggle("p1-only", state.p1Only);
+      boxes.setAttribute("data-filter", state.filter);
+    });
+  }
+
+  function setRowHover(id, on) {
+    var row = $('tr[data-id="' + id + '"]');
+    if (row) row.classList.toggle("is-hover", on);
+    ["#boxes", "#sideBoxes"].forEach(function (sel) {
+      var box = $(sel + ' .box[data-id="' + id + '"]');
+      if (box) box.classList.toggle("is-hover", on);
+    });
+  }
+
+  /* ---------- render: table + mobile list ---------- */
+  function renderTable(rows) {
+    var body = $("#tableBody");
+    var list = $("#houseList");
+    $("#tableCount").textContent = rows.length;
+
+    if (!rows.length) {
+      body.innerHTML = '<tr class="table-empty"><td colspan="6">Không có nhà ở mức này. Thử hạ ngưỡng hoặc bỏ bộ lọc.</td></tr>';
+      list.innerHTML = '<div class="house-card" style="cursor:default"><span class="hc-main"><span class="hc-title">Không có nhà ở mức này</span><span class="hc-meta">Thử hạ ngưỡng hoặc bỏ bộ lọc</span></span></div>';
+      return;
+    }
+
+    body.innerHTML = rows.map(function (h) {
+      var sel = h.id === state.selectedId ? " is-selected" : "";
+      return '<tr data-id="' + h.id + '" tabindex="0" role="button" class="' + sel.trim() + '" aria-label="Nhà #' + pad2(h.id) + ', ' + LABEL[h.cls] + ', ưu tiên ' + h.cls + ', tin cậy ' + fmt(h.conf) + '">' +
+        '<td class="id-cell">#' + pad2(h.id) + '</td>' +
+        '<td><span class="type-cell" data-cls="' + h.cls + '"><i class="type-dot"></i>' + LABEL[h.cls] + '</span></td>' +
+        '<td><span class="prio" data-cls="' + h.cls + '">' + h.cls + '</span></td>' +
+        '<td><span class="conf-cell" data-cls="' + h.cls + '"><span class="conf-bar"><i style="width:' + Math.round(h.conf * 100) + '%"></i></span><span class="conf-num">' + fmt(h.conf) + '</span></span></td>' +
+        '<td class="coord-cell">' + coords(h) + '</td>' +
+        '<td class="focus-cell"><button class="focus-btn" type="button" data-focus="' + h.id + '" aria-label="Xem nhà #' + pad2(h.id) + ' trên ảnh"><svg class="ic"><use href="#i-crosshair"/></svg></button></td>' +
+      '</tr>';
+    }).join("");
+
+    list.innerHTML = rows.map(function (h) {
+      return '<button class="house-card" type="button" data-id="' + h.id + '">' +
+        '<span class="prio" data-cls="' + h.cls + '">' + h.cls + '</span>' +
+        '<span class="hc-main"><span class="hc-title">#' + pad2(h.id) + ' · ' + LABEL[h.cls] + '</span><span class="hc-meta">tin cậy ' + fmt(h.conf) + ' · ' + coords(h) + '</span></span>' +
+        '<svg class="ic"><use href="#i-crosshair"/></svg>' +
+      '</button>';
+    }).join("");
+  }
+
+  /* ---------- selection ---------- */
+  function selectHouse(id) {
+    var h = HOUSES.find(function (x) { return x.id === id; });
+    if (!h) return;
+    state.selectedId = (state.selectedId === id) ? null : id;
+
+    if (state.selectedId && state.mode === "compare" && h.x < state.split) {
+      setSplit(0);
+    }
+
+    render(boolFromThreshold(), false);
+    updateSelectedInfo();
+
+    if (state.selectedId) {
+      var row = $('tr[data-id="' + id + '"]');
+      if (row) row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      var boxSel = state.mode === "side" ? '#sideBoxes .box[data-id="' + id + '"]' : '#boxes .box[data-id="' + id + '"]';
+      var box = $(boxSel);
+      if (box) box.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }
+
+  function updateSelectedInfo() {
+    var el = $("#selectedInfo");
+    if (!el) return;
+    var h = HOUSES.find(function (x) { return x.id === state.selectedId; });
+    if (!h) {
+      el.hidden = true;
+      return;
+    }
+    el.hidden = false;
+    $("#selectedText").textContent = "#" + pad2(h.id) + " · " + h.cls + " · " + fmt(h.conf);
+  }
+
+  function boolFromThreshold() {
+    return visibleByThreshold();
+  }
+
+  /* ---------- main render ---------- */
+  function render(visible, animate) {
+    var houses = visible || visibleByThreshold();
+    var c = countByClass(houses);
+    var rows = displayedHouses();
+
+    renderKpis(c, !!animate);
+    renderBoxes($("#boxes"), houses, true);
+    renderBoxes($("#sideBoxes"), houses, true);
+    renderTable(rows);
+    updateThresholdUI(c);
+    updateSelectedInfo();
+    updateStageEmpty(c.total);
+
+    if (state.selectedId && !houses.some(function (h) { return h.id === state.selectedId; })) {
+      state.selectedId = null;
+      updateSelectedInfo();
+    }
+  }
+
+  function updateThresholdUI(c) {
+    setText(".js-threshold", fmt(state.threshold));
+    setText(".js-total", c.total);
+
+    var base = countByClass(HOUSES.filter(function (h) { return h.conf >= 0.30 - 1e-9; })).total;
+    var delta = c.total - base;
+    var deltaEl = $("#thresholdDelta");
+    if (deltaEl) {
+      if (Math.abs(state.threshold - 0.30) < 0.005) deltaEl.textContent = "· mặc định";
+      else if (delta > 0) deltaEl.textContent = "· +" + delta + " so với 0,30";
+      else if (delta < 0) deltaEl.textContent = "· −" + Math.abs(delta) + " so với 0,30";
+      else deltaEl.textContent = "· không đổi";
+    }
+
+    var slider = $("#thresholdRange");
+    if (slider) {
+      slider.value = state.threshold;
+      var pct = (state.threshold - 0.10) / (0.90 - 0.10) * 100;
+      slider.style.setProperty("--fill", Math.max(0, Math.min(100, pct)) + "%");
+    }
+    $$(".preset").forEach(function (p) {
+      var v = parseFloat(p.getAttribute("data-threshold"));
+      p.setAttribute("aria-pressed", Math.abs(v - state.threshold) < 0.005 ? "true" : "false");
+    });
+  }
+
+  function updateStageEmpty(total) {
+    $("#stageEmpty").hidden = total !== 0;
+    var side = $("#sideEmpty");
+    if (side) side.hidden = total !== 0;
+  }
+
+  /* ---------- app states ---------- */
+  function setAppState(name, auto) {
+    state.appState = name;
+    var result = $("#resultBlock");
+    var empty = $("#emptyBlock");
+    var loading = $("#loadingBlock");
+    var error = $("#errorBlock");
+    var thumbEmpty = $("#thumbEmpty");
+    var thumbImg = $("#thumbImg");
+    var btn = $("#analyzeBtn");
+    var label = btn.querySelector(".btn-label");
+
+    result.hidden = name !== "result";
+    empty.hidden = name !== "empty";
+    loading.hidden = name !== "loading";
+    error.hidden = name !== "error";
+
+    thumbEmpty.hidden = name !== "empty";
+    thumbImg.style.visibility = name === "empty" ? "hidden" : "visible";
+    $(".thumb-meta").hidden = name === "empty";
+    $(".file-line").hidden = name === "empty";
+
+    var isBusy = name === "loading";
+    btn.disabled = isBusy || name === "empty";
+    label.textContent = isBusy ? "Đang phân tích…" : (name === "empty" ? "Phân tích" : "Phân tích lại");
+
+    var mobileBtn = $("#mobileAnalyze");
+    mobileBtn.disabled = isBusy || name === "empty";
+
+    $("#statusTime").textContent = isBusy ? "Đang xử lý" : (name === "empty" ? "Chưa có ảnh" : (name === "error" ? "Lỗi xử lý" : "3,87s"));
+    $("#statusDim").textContent = (name === "empty" || name === "error") ? "—" : "640×480";
+
+    if (name !== "result") {
+      setText(".js-total", "—");
+      var deltaEl = $("#thresholdDelta");
+      if (deltaEl) deltaEl.textContent = "";
+    }
+
+    var sel = $("#stateSelect");
+    if (sel && sel.value !== name) sel.value = name;
+
+    if (name === "result") {
+      render(boolFromThreshold(), false);
+    }
+    if (name === "empty") {
+      $("#selectedInfo").hidden = true;
+    }
+  }
+
+  function runAnalysis() {
+    if (state.appState === "empty") {
+      toast("Chọn ảnh trước khi phân tích.");
+      return;
+    }
+    if (state.appState === "loading") return;
+    setAppState("loading");
+    clearTimeout(state.loadingTimer);
+
+    var imagePromise = state.currentFile 
+      ? Promise.resolve(state.currentFile) 
+      : fetch('flood.jpg').then(function(res) { return res.blob(); });
+
+    imagePromise
+      .then(function(blobOrFile) {
+        var formData = new FormData();
+        formData.append("anh", blobOrFile, state.currentFile ? state.currentFile.name : "flood.jpg");
+        formData.append("nguong", state.threshold);
+        var ckptSel = $("#checkpointSelect");
+        formData.append("model", ckptSel ? ckptSel.value : "best");
+
+        return fetch('/api/du_doan', {
+          method: 'POST',
+          body: formData
+        });
+      })
+      .then(function(res) {
+        if (!res.ok) {
+          return res.text().then(function(errText) {
+            var message = errText;
+            try {
+              var payload = JSON.parse(errText);
+              if (payload.detail) message = payload.detail;
+            } catch (_) {}
+            throw new Error("Lỗi " + res.status + ": " + message);
+          });
+        }
+        return res.json();
+      })
+      .then(function(data) {
+        var imgW = data.kich_thuoc ? data.kich_thuoc[0] : 640;
+        var imgH = data.kich_thuoc ? data.kich_thuoc[1] : 480;
+        
+        var newHouses = [];
+        if (data.boxes) {
+          data.boxes.forEach(function(b, idx) {
+            var clsMap = { "Flooded": "P1", "Partially-Flooded": "P2", "Not-Flooded": "P3" };
+            var cls = clsMap[b.nhan] || "P3";
+            var x = (b.x1 / imgW) * 100;
+            var y = (b.y1 / imgH) * 100;
+            var w = ((b.x2 - b.x1) / imgW) * 100;
+            var h = ((b.y2 - b.y1) / imgH) * 100;
+            newHouses.push({
+              id: idx + 1,
+              cls: cls,
+              conf: b.diem,
+              x: Math.round(x * 10) / 10,
+              y: Math.round(y * 10) / 10,
+              w: Math.round(w * 10) / 10,
+              h: Math.round(h * 10) / 10
+            });
+          });
+        }
+        if (newHouses.length > 0) {
+          HOUSES.length = 0;
+          newHouses.forEach(function(h) { HOUSES.push(h); });
+        }
+
+        if (data.anh_ket_qua) {
+          $$(".stage > img:not(.base), .after-layer img, .side-frame img:last-child, #lightboxModal img").forEach(function(img) {
+            img.src = data.anh_ket_qua;
+          });
+        }
+
+        setAppState("result");
+        var total = countByClass(visibleByThreshold()).total;
+        toast("Phân tích xong (AI thật) · " + total + " nhà · " + Math.round(data.ms) + "ms");
+      })
+      .catch(function(err) {
+        console.error("Backend API call failed:", err);
+        $("#errorMessage").textContent = err.message;
+        toast("Lỗi: " + err.message);
+        setAppState("error");
+      });
+  }
+
+  /* ---------- threshold / filter / mode ---------- */
+  function setThreshold(v, animate) {
+    var n = Math.max(0.10, Math.min(0.90, Math.round(v * 100) / 100));
+    if (n === state.threshold) {
+      updateThresholdUI(countByClass(visibleByThreshold()));
+      return;
+    }
+    state.threshold = n;
+    if (state.selectedId) {
+      var h = HOUSES.find(function (x) { return x.id === state.selectedId; });
+      if (h && h.conf < n) state.selectedId = null;
+    }
+    render(boolFromThreshold(), animate);
+  }
+
+  function setFilter(f) {
+    if (f === "all") {
+      state.filter = "all";
+    } else {
+      state.filter = (state.filter === f) ? "all" : f;
+    }
+    if (state.selectedId) {
+      var h = HOUSES.find(function (x) { return x.id === state.selectedId; });
+      if (h && state.filter !== "all" && h.cls !== state.filter) state.selectedId = null;
+    }
+    applyBoxClasses();
+    render(boolFromThreshold(), false);
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    var stage = $("#stage");
+    stage.classList.toggle("mode-result", mode === "result");
+    stage.classList.toggle("mode-compare", mode === "compare");
+    stage.classList.toggle("mode-side", mode === "side");
+    $("#modeResult").setAttribute("aria-pressed", mode === "result" ? "true" : "false");
+    $("#modeCompare").setAttribute("aria-pressed", mode === "compare" ? "true" : "false");
+    $("#modeSide").setAttribute("aria-pressed", mode === "side" ? "true" : "false");
+    if (mode === "compare") {
+      setSplit(state.split === 0 ? 50 : state.split);
+      toast("Kéo thanh giữa để so sánh ảnh gốc và kết quả.");
+    }
+    if (mode === "side") {
+      toast("Ảnh gốc bên trái · kết quả sau khi quét bên phải.");
+    }
+  }
+
+  function setSplit(v) {
+    var n = Math.max(0, Math.min(100, v));
+    state.split = n;
+    var stage = $("#stage");
+    stage.style.setProperty("--split", n);
+    var handle = $("#splitHandle");
+    handle.setAttribute("aria-valuenow", Math.round(n));
+    handle.style.setProperty("--split", n);
+  }
+
+  function setToggle(name, value, btn) {
+    state[name] = value;
+    btn.setAttribute("aria-pressed", value ? "true" : "false");
+    applyBoxClasses();
+  }
+
+  function setAdvancedParam(name, value, btn) {
+    if (btn && btn.getAttribute("role") === "switch") {
+      btn.setAttribute("aria-checked", value ? "true" : "false");
+    }
+    if (name === "tiling") {
+      $("#tileSize").disabled = !value;
+    }
+    toast("Đã đổi tham số · bấm “Phân tích lại” để áp dụng.");
+  }
+
+  /* ---------- lightbox ---------- */
+  function openLightbox() {
+    var modal = $("#lightboxModal");
+    var houses = visibleByThreshold();
+    $("#lightboxSub").textContent = "ngưỡng " + fmt(state.threshold) + " · " + houses.length + " nhà";
+    renderBoxes($("#lightboxBoxes"), houses, false);
+    var lb = $("#lightboxBoxes");
+    lb.classList.toggle("labels-off", !state.showLabels);
+    lb.classList.toggle("conf-off", !state.showConf);
+    lb.classList.toggle("p1-only", state.p1Only);
+    lb.setAttribute("data-filter", state.filter);
+    $("#zoomStage").style.setProperty("--zoom", 1);
+    $$(".zoom-btn").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-zoom") === "1" ? "true" : "false"); });
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    var close = modal.querySelector("[data-close]");
+    if (close) close.focus();
+  }
+
+  function closeModal(id) {
+    var modal = document.getElementById(id);
+    if (!modal) return;
+    modal.hidden = true;
+    if ($("#helpModal").hidden && $("#lightboxModal").hidden) {
+      document.body.style.overflow = "";
+    }
+  }
+
+  /* ---------- wire up ---------- */
+  function init() {
+    try {
+      var saved = localStorage.getItem("nn-theme");
+      if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved);
+    } catch (e) {}
+    syncThemeIcon();
+
+    if (window.matchMedia) {
+      var mq = window.matchMedia("(prefers-color-scheme: dark)");
+      var onChange = function () { syncThemeIcon(); };
+      if (mq.addEventListener) mq.addEventListener("change", onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
+
+    $("#themeBtn").addEventListener("click", toggleTheme);
+    $("#effectsBtn").addEventListener("click", toggleEffects);
+
+    $("#modeBasic").addEventListener("click", function () {
+      $("#modeBasic").setAttribute("aria-pressed", "true");
+      $("#modeAdvanced").setAttribute("aria-pressed", "false");
+      $("#basicBlock").hidden = false;
+      $("#advancedBlock").hidden = true;
+      var ps = $(".panel-scroll");
+      if (ps) ps.scrollTop = 0;
+    });
+    $("#modeAdvanced").addEventListener("click", function () {
+      $("#modeBasic").setAttribute("aria-pressed", "false");
+      $("#modeAdvanced").setAttribute("aria-pressed", "true");
+      $("#basicBlock").hidden = true;
+      $("#advancedBlock").hidden = false;
+      var ps = $(".panel-scroll");
+      if (ps) ps.scrollTop = 0;
+    });
+    $("#customThreshold").addEventListener("click", function () {
+      $("#modeAdvanced").click();
+      $("#thresholdRange").focus();
+    });
+
+    $$(".preset").forEach(function (p) {
+      p.addEventListener("click", function () {
+        setThreshold(parseFloat(p.getAttribute("data-threshold")), true);
+      });
+    });
+
+    $("#thresholdRange").addEventListener("input", function (e) {
+      setThreshold(parseFloat(e.target.value), false);
+    });
+
+    $$(".kpi").forEach(function (card) {
+      card.addEventListener("click", function () {
+        setFilter(card.getAttribute("data-filter"));
+      });
+    });
+
+    $$(".filter-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        setFilter(chip.getAttribute("data-filter"));
+      });
+    });
+
+    $("#tgBoxes").addEventListener("click", function () { setToggle("showBoxes", !state.showBoxes, this); });
+    $("#tgLabels").addEventListener("click", function () { setToggle("showLabels", !state.showLabels, this); });
+    $("#tgConf").addEventListener("click", function () { setToggle("showConf", !state.showConf, this); });
+    $("#tgP1").addEventListener("click", function () { setToggle("p1Only", !state.p1Only, this); });
+
+    $("#modeResult").addEventListener("click", function () { setMode("result"); });
+    $("#modeCompare").addEventListener("click", function () { setMode("compare"); });
+    $("#modeSide").addEventListener("click", function () { setMode("side"); });
+
+    $("#splitHandle").addEventListener("keydown", function (e) {
+      var step = e.shiftKey ? 10 : 2;
+      if (e.key === "ArrowLeft") { e.preventDefault(); setSplit(state.split - step); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); setSplit(state.split + step); }
+      else if (e.key === "Home") { e.preventDefault(); setSplit(0); }
+      else if (e.key === "End") { e.preventDefault(); setSplit(100); }
+    });
+
+    var dragging = false;
+    var stage = $("#stage");
+    function splitFromEvent(e) {
+      var rect = stage.getBoundingClientRect();
+      if (!rect.width) return;
+      setSplit(((e.clientX - rect.left) / rect.width) * 100);
+    }
+    $("#splitHandle").addEventListener("pointerdown", function (e) {
+      dragging = true;
+      try { this.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (dragging) splitFromEvent(e);
+    });
+    window.addEventListener("pointerup", function () { dragging = false; });
+    stage.addEventListener("pointerdown", function (e) {
+      if (state.mode !== "compare") return;
+      if (e.target.closest(".box") || e.target.closest(".split-handle")) return;
+      splitFromEvent(e);
+    });
+
+    $("#tableBody").addEventListener("click", function (e) {
+      var tr = e.target.closest("tr[data-id]");
+      if (tr) selectHouse(Number(tr.getAttribute("data-id")));
+    });
+    $("#tableBody").addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      var tr = e.target.closest("tr[data-id]");
+      if (!tr) return;
+      e.preventDefault();
+      selectHouse(Number(tr.getAttribute("data-id")));
+    });
+    $("#houseList").addEventListener("click", function (e) {
+      var card = e.target.closest(".house-card[data-id]");
+      if (card) selectHouse(Number(card.getAttribute("data-id")));
+    });
+    $("#clearSelected").addEventListener("click", function () {
+      state.selectedId = null;
+      render(boolFromThreshold(), false);
+    });
+
+    $("#analyzeBtn").addEventListener("click", runAnalysis);
+    $("#mobileAnalyze").addEventListener("click", runAnalysis);
+    $("#mobileSettings").addEventListener("click", function () {
+      var panel = $(".panel");
+      if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    $("#stateSelect").addEventListener("change", function (e) {
+      setAppState(e.target.value, false);
+    });
+
+    // file pickers
+    var fileInput = $("#fileInput");
+    function pickFile() { fileInput.click(); }
+    ["#changeBtn", "#emptyPick", "#errorPick", "#mobilePick"].forEach(function (sel) {
+      var el = $(sel);
+      if (el) el.addEventListener("click", pickFile);
+    });
+
+    function handleFile(f) {
+      if (!f || !f.type.startsWith("image/")) {
+        toast("Vui lòng chọn tệp ảnh hợp lệ (JPG, PNG, WEBP).");
+        return;
+      }
+      state.currentFile = f;
+      var url = URL.createObjectURL(f);
+
+      var thumbImg = $("#thumbImg");
+      if (thumbImg) thumbImg.src = url;
+
+      $$(".stage > img.base, .after-layer img, .side-frame img, #lightboxModal img").forEach(function(img) {
+        img.src = url;
+      });
+
+      var thumbName = $("#thumbName");
+      if (thumbName) thumbName.textContent = f.name;
+
+      var fileSizeKb = Math.round(f.size / 1024);
+      var fileLineSpan = $(".file-line .mono");
+      if (fileLineSpan) fileLineSpan.textContent = fileSizeKb + " KB";
+
+      var tempImg = new Image();
+      tempImg.onload = function() {
+        var thumbDim = $("#thumbDim");
+        if (thumbDim) thumbDim.textContent = tempImg.naturalWidth + " × " + tempImg.naturalHeight;
+        var statusDim = $("#statusDim");
+        if (statusDim) statusDim.textContent = tempImg.naturalWidth + "×" + tempImg.naturalHeight;
+      };
+      tempImg.src = url;
+
+      HOUSES.length = 0;
+      render(boolFromThreshold(), false);
+
+      toast("Đã chọn “" + f.name + "” · bấm Phân tích lại để nhận diện.");
+      setAppState("result");
+    }
+
+    fileInput.addEventListener("change", function () {
+      var f = fileInput.files && fileInput.files[0];
+      if (f) handleFile(f);
+      fileInput.value = "";
+    });
+
+    $("#emptyCamera").addEventListener("click", function () {
+      toast("Chụp ảnh chỉ khả dụng trong app thật (quyền camera bị chặn trong khung xem).");
+    });
+    $("#emptySample").addEventListener("click", function () {
+      setAppState("result");
+      toast("Đang dùng ảnh mẫu · dữ liệu minh hoạ.");
+    });
+    $("#errorRetry").addEventListener("click", runAnalysis);
+
+    var dropZone = $("#dropZone");
+    ["dragenter", "dragover"].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+      });
+    });
+    ["dragleave", "drop"].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+      });
+    });
+    dropZone.addEventListener("drop", function (e) {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) handleFile(f);
+    });
+
+    $("#exportBtn").addEventListener("click", function () {
+      toast("Bản mockup — chức năng xuất sẽ có ở bản thật.");
+    });
+    $$("[data-export]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        toast("Bản mockup — xuất " + b.getAttribute("data-export").toUpperCase() + " sẽ có ở bản thật.");
+      });
+    });
+
+    // advanced controls
+    $("#tilingSwitch").addEventListener("click", function () {
+      var v = this.getAttribute("aria-checked") !== "true";
+      setAdvancedParam("tiling", v, this);
+      $("#tileSize").disabled = !v;
+    });
+    $("#mergeSwitch").addEventListener("click", function () {
+      var v = this.getAttribute("aria-checked") !== "true";
+      setAdvancedParam("merge", v, this);
+    });
+    $("#ttaSwitch").addEventListener("click", function () {
+      var v = this.getAttribute("aria-checked") !== "true";
+      setAdvancedParam("tta", v, this);
+    });
+    $("#checkpointSelect").addEventListener("change", function () {
+      toast("Đổi checkpoint sẽ nạp lại model (10–25 giây) khi bấm Phân tích lại.");
+    });
+    $("#resetAdvanced").addEventListener("click", function () {
+      state.threshold = 0.30;
+      $("#tileSize").value = 896;
+      $("#iouInput").value = 0.50;
+      $("#minSide").value = 20;
+      $("#checkpointSelect").value = "best_ep4";
+      $("#tilingSwitch").setAttribute("aria-checked", "true");
+      $("#mergeSwitch").setAttribute("aria-checked", "true");
+      $("#ttaSwitch").setAttribute("aria-checked", "false");
+      $("#tileSize").disabled = false;
+      render(boolFromThreshold(), true);
+      toast("Đã khôi phục tham số mặc định.");
+    });
+
+    // help + lightbox
+    function openHelp() {
+      $("#helpModal").hidden = false;
+      document.body.style.overflow = "hidden";
+      var close = $("#helpModal").querySelector("[data-close]");
+      if (close) close.focus();
+    }
+    $("#helpBtn").addEventListener("click", openHelp);
+    $("#helpBtn2").addEventListener("click", openHelp);
+    $("#lightboxBtn").addEventListener("click", openLightbox);
+
+    $$("[data-close]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        closeModal(b.getAttribute("data-close"));
+      });
+    });
+    $$(".modal").forEach(function (m) {
+      m.addEventListener("click", function (e) {
+        if (e.target === m) closeModal(m.id);
+      });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        if (!$("#helpModal").hidden) closeModal("helpModal");
+        if (!$("#lightboxModal").hidden) closeModal("lightboxModal");
+      }
+    });
+
+    $$(".zoom-btn").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var z = parseFloat(b.getAttribute("data-zoom"));
+        $("#zoomStage").style.setProperty("--zoom", z);
+        $$(".zoom-btn").forEach(function (x) {
+          x.setAttribute("aria-pressed", x === b ? "true" : "false");
+        });
+      });
+    });
+
+    // initial render
+    setSplit(50);
+    render(boolFromThreshold(), false);
+    setAppState("result", false);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>

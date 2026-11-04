@@ -1,0 +1,245 @@
+﻿=======================================================================
+  NHAN DIEN NHA NGAP v0.0.2 — HUONG DAN CHO BAN
+=======================================================================
+
+Cam on ban da nhan goi nay. Toan bo la mot web nho chay tren may cua
+ban: ban chon anh, no ve khung len tung ngoi nha va ghi ro ngap /
+khong ngap / ngap mot phan. Tat ca chay ngay tren may ban, khong gui
+anh di dau ca.
+
+Ban KHONG phai sua mot dong code nao. Chi bam 2 file .bat theo thu tu.
+
+-----------------------------------------------------------------------
+1. CAN GI TRUOC KHI BAT DAU
+-----------------------------------------------------------------------
+
+  [ ] Windows 10 hoac 11, ban 64-bit.
+  [ ] GPU NVIDIA (da kiem chung tren RTX 2050; RTX 30xx / 40xx chay
+      tot hon). Khong co GPU van chay duoc, xem muc 6.
+  [ ] Python 3.13 ban 64-bit, tai tu https://www.python.org/downloads/
+        - PHAI la ban 3.13. Goi cai dat cua du an co san ban dung cho
+          Python 3.13; Python 3.12 hay 3.14 deu KHONG cai duoc.
+        - Khi cai nho tich "Add python.exe to PATH".
+        - DUNG ban Python tren Microsoft Store: ban do khong co lenh
+          "py" ma file CAI_DAT.bat can dung.
+  [ ] Driver NVIDIA moi: ban CUDA 13.2 cua du an can driver R580 tro
+      len. Vao NVIDIA App hoac geforce.com cap nhat cho chac.
+  [ ] Trong o dia ~6-7 GB.
+  [ ] Mang Internet cho lan cai dau tien (tai khoang 2,5 GB).
+
+-----------------------------------------------------------------------
+2. BUOC 1 — GIAI NEN
+-----------------------------------------------------------------------
+
+Giai nen ca thu muc ra mot cho rieng, vi du:
+
+    D:\nha_ngap_web
+
+BA DIEU KIEN ve cho giai nen — quan trong nhat trong ca file nay:
+
+    (a) Duong dan PHAI la ASCII: khong dau tieng Viet, khong dau cach.
+        Dung dat trong Desktop hay OneDrive co ten tieng Viet, va dung
+        dat trong "C:\Program Files" (can quyen ghi). Ly do: cmd.exe
+        xu ly duong dan co dau khong dang tin cay, con web thi can ghi
+        vao chinh thu muc minh.
+
+    (b) Giai nen TRON VEN ca thu muc, dung bo sot. Web can dung 3 file
+        nam trong thu muc con "checkpoints":
+            checkpoints\work_det\cau_hinh_detector.py
+            checkpoints\work_det\work_aug\best_coco_bbox_mAP_epoch_4.pth
+            checkpoints\work_cls\convnext_tiny_3lop.pth
+        Thieu mot trong ba la web khong chay duoc.
+
+    (c) KHONG chuyen thu muc di noi khac sau khi da cai xong. Neu buoc
+        phai doi cho thi phai xoa thu muc "venv" roi bam lai
+        CAI_DAT.bat (mat 10-30 phut).
+
+Sau khi giai nen xong, thu muc phai co dang:
+
+    D:\nha_ngap_web\
+        CAI_DAT.bat            <-- bam cai nay truoc
+        CHAY_WEB.bat           <-- roi bam cai nay de mo web
+        HUONG_DAN_CHO_BAN.txt  <-- file ban dang doc
+        KET_LUAN_KIEM_CHUNG.txt
+        duong_dan.py  va_moi_truong.py  loi_suy_luan.py
+        ung_dung.py   kiem_tra_moi_truong.py  requirements.txt
+        giao_dien\index.html
+        checkpoints\...
+        test\...               <-- 203 anh de ban tu kiem chung
+
+-----------------------------------------------------------------------
+3. BUOC 2 — BAM CAI_DAT.bat (10-30 phut)
+-----------------------------------------------------------------------
+
+Bam dup vao CAI_DAT.bat va de yen. No se:
+
+    - Tao mot moi truong Python rieng trong thu muc "venv".
+    - Tai torch + torchvision ban CUDA (~1,9 GB) tu pytorch.org.
+    - Tai mmcv (wheel dung cho Windows / Python 3.13 / CUDA 13.2) tu
+      GitHub.
+    - Tai mmdet, mmengine, FastAPI, uvicorn, pillow.
+    - Chay luon cong kiem tra moi truong o cuoi.
+
+Lan dau mat 10-30 phut tuy mang. Thay chu [n/6] nhay dan la binh
+thuong, khong phai treo.
+
+Neu giua chung loi mang: cu bam lai CAI_DAT.bat. No tu bo qua cac buoc
+da xong, khong tai lai tu dau.
+
+Cuoi buoc nay, neu ban thay dong:
+
+    CA X BUOC XANH.
+
+la moi thu da san sang. (Con mot dong nho sai chinh ta o cuoi — "CA 5
+BUOC XANH" trong khi that ra co 6 buoc — chi la cau chu, khong phai
+loi gi.)
+
+CAI_DAT.bat cung chay san cong kiem tra lan dau, mat khoang 1 phut.
+
+-----------------------------------------------------------------------
+4. BUOC 3 — BAM CHAY_WEB.bat
+-----------------------------------------------------------------------
+
+Bam dup vao CHAY_WEB.bat. Cho 10-25 giay de nap model, roi trinh duyet
+tu mo dia chi http://127.0.0.1:8000
+
+Lan dau tien Windows Defender se hien hop thoai "Windows Security
+Alert" hoi co cho phep khong — bam Allow access. Neu lo bam Cancel thi
+web van chay binh thuong tren may ban, chi la may khac trong cung
+mang Wi-Fi khong vao duoc. Trong file CHAY_WEB.bat co san cach them
+quy tac tuong lua bang tay (phan ghi chu o cuoi file).
+
+Muon tat web: bam Ctrl+C trong cua so den, hoac dong cua so do lai.
+
+Vai tuy chon, go ngay sau ten file .bat:
+
+    CHAY_WEB.bat --cong 8080      Neu cong 8000 dang bi chuong trinh
+                                  khac chiem ("Address already in use").
+    CHAY_WEB.bat --cpu            Ep chay bang CPU, bo qua GPU.
+                                  Cham hon nhieu nhung LUON dung.
+
+-----------------------------------------------------------------------
+5. BAN TU KIEM CHUNG DUOC (khong can tin loi gioi thieu)
+-----------------------------------------------------------------------
+
+Trong goi co kem 203 anh test va mot phep thu hoi quy da ghi lai ket
+qua tu luc train. Ban chay lai de doi chieu:
+
+    venv\Scripts\python.exe kiem_tra_moi_truong.py --dem-test
+
+(mat 2-3 phut; nho "cd" vao thu muc da giai nen truoc, hoac go duong
+dan day du). Phep thu chi DEM so luong nha model tu doan ra, KHONG
+dung nhan dan san — dung tinh than cua do an.
+
+Ket qua mong doi, tai nguong 0.30:
+
+    Flooded            890
+    Not-Flooded       1604
+    Partially-Flooded 1793
+    TONG              4287
+
+NEU LECH VAI BOX, DUNG HOANG. Do la chuyen binh thuong, khong phai
+loi. Ly do: co 207 khung chi cach nguong dung 1/100 diem, chi can mot
+khung lat la tong lech 1. GPU khac doi hoac phien ban OpenCV khac doi
+deu lam lat nhu vay. Chinh tac gia khi chay lai bang web cung ra 4288
+thay vi 4287 — lech +1 tren 4287, tuc 0,023%. Ban doc muc 4 cua file
+KET_LUAN_KIEM_CHUNG.txt di kem de xem so lieu day du.
+
+Con neu lech NHIEU (hang chuc box tro len) thi luc do moi that su co
+van de — chup lai man hinh gui cho tac gia.
+
+-----------------------------------------------------------------------
+6. NEU MAY BAN KHONG CO GPU, HOAC GPU QUA CU
+-----------------------------------------------------------------------
+
+Web van chay. Truoc khi chay, no tu thu that mot phep tinh nho tren
+GPU. Neu GPU khong lam duoc (thuong gap o GTX 10xx tro xuong — kien
+truc Pascal), web tu chuyen sang CPU va in mot dong canh bao ro rang.
+
+    - Ket qua VAN DUNG y nhu tren GPU. Chi la CHAM HON NHIEU: do
+      thuc te tren may tac gia, mot anh 640x640 mat ~84 giay bang CPU
+      so voi ~1,8 giay bang GPU. Web KHONG bi treo — cu de cho, dung
+      tat giua chung.
+    - Tat han dong canh bao do: CHAY_WEB.bat --cpu
+
+Cac doi GPU da biet la chay tot: GTX 1650 (sm_75), RTX 20xx/30xx
+(sm_86), RTX 40xx (sm_89 — khong co trong danh sach cua wheel nhung
+van chay duoc nho tuong thich nguoc).
+
+-----------------------------------------------------------------------
+7. KHI CO TRUC TRAC — DOC BANG NAY TRUOC
+-----------------------------------------------------------------------
+
+  Hien tuong                        | Nguyen nhan & cach xu ly
+  ----------------------------------|--------------------------------
+  Bam CAI_DAT.bat, bao "Khong tim    | Chua cai Python 3.13, hoac cai
+  thay Python 3.13"                 | ban Microsoft Store. Cai lai tu
+                                    | python.org, nho tich "Add
+                                    | python.exe to PATH".
+  ----------------------------------|--------------------------------
+  Bao "Cai mmcv that bai"           | Buoc nay tai wheel 24 MB tu
+                                    | GitHub. Kiem tra mang, mo thu
+                                    | https://github.com/MiroPsota/
+                                    | torch_packages_builder/releases
+                                    | trong trinh duyet xem vao duoc
+                                    | khong, roi bam lai CAI_DAT.bat.
+  ----------------------------------|--------------------------------
+  Bao thieu file / "THIEU DUONG    | Giai nen thieu hoac sai cau
+  DAN BAT BUOC"                     | truc. Xem lai muc 2(b): phai
+                                    | co du 3 file trong checkpoints.
+  ----------------------------------|--------------------------------
+  Web bao "Address already in use"  | Cong 8000 dang bi chiem. Chay
+                                    | lai: CHAY_WEB.bat --cong 8080
+  ----------------------------------|--------------------------------
+  Cua so den hien loi rong dai,     | Chup lai nguyen man hinh (ke ca
+  hoac web chay ra ket qua la       | cac dong phia tren) gui cho tac
+  "khong ngap" het / "ngap" het     | gia. Xem them muc 8 ben duoi.
+  ----------------------------------|--------------------------------
+  Trinh duyet khong tu mo            | Mo tay: http://127.0.0.1:8000
+
+Con mot loi nua rat de gap: thu muc giai nen co DAU tieng Viet hoac dau
+cach. Khi do loi thuong rat kho hieu (bao khong mo duoc file, hoac
+web chay duoc nhung bao thieu checkpoint). Cach sua duy nhat la giai
+nen lai vao thu muc ASCII sach roi chay lai CAI_DAT.bat.
+
+-----------------------------------------------------------------------
+8. VAI SO LIEU VE MODEL (de ban biet min tin cai gi)
+-----------------------------------------------------------------------
+
+Day la do an tot nghiep, khong phai san pham thuong mai. Cac con so
+that, do tren tap test 203 anh:
+
+    - Detector (Cascade R-CNN, 1 lop "house"): mAP 0,3130.
+      No tim ra ngoi nha tot, nhung nha nho hon ~32 diem anh thi hay
+      bo sot — day la nut that da biet cua do an, da thu tang do phan
+      giai va khong cai thien duoc.
+
+    - Bo phan loai trang thai (ConvNeXt-Tiny, 3 lop): do chinh xac
+      0,7195. Tuc la trong 10 ngoi nha no tim thay, khoang 7 cai duoc
+      gan nhan dung. Phan con lai co the nham giua "ngap" va "ngap mot
+      phan" — hai trang thai nay nhin anh nhieu khi khong phan biet noi.
+
+Vi vay: nen dung de tham khao, dung nen dung lam can cu duy nhat cho
+quyet dinh nao quan trong.
+
+Du an KHONG dung YOLO, va KHONG dung nhan dan san nao (chi dung anh va
+nhan co san cua bo du lieu). Neu ban thay tai lieu nao noi khac thi
+tai lieu do sai.
+
+-----------------------------------------------------------------------
+9. GOI NAY GOM NHUNG GI
+-----------------------------------------------------------------------
+
+    code                 ~80 KB
+    checkpoints\         ~371 MB   (2 model da train xong)
+    test\                ~14 MB    (203 anh + nhan cua bo du lieu)
+    ------------------------------------
+    TONG                 ~385 MB
+
+Khong kem san "venv" (moi truong Python) vi no nang 2,5 GB va gan
+chat voi tung may — CAI_DAT.bat se tao lai dung cho may ban.
+
+Chuc ban chay vui. Co gi ket, chup man hinh gui lai nguyen ven la
+nhanh nhat.
+
+=======================================================================
