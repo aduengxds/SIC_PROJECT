@@ -235,3 +235,8 @@ Web có bốn endpoint: `GET /`, `GET /api/thong_tin`, `POST /api/du_doan`, `POS
 | P1 | Anchor / tiling / random scale cho nhà nhỏ | AP_s chỉ đạt 0,169 |
 | P2 | Dedupe và chia split theo nguồn | test sạch hơn thì số liệu mới đáng tin tuyệt đối |
 | P2 | Tăng `max_per_img` lên 150–200 | còn 2/203 ảnh bị cap ở 100 box |
+
+## Giấy phép
+
+- **Mã nguồn**: MIT — xem [`LICENSE`](LICENSE).
+- **Dữ liệu**: `merged_dataset` v1 của Roboflow, giấy phép CC BY 4.0 — dùng lại phải ghi nguồn.
