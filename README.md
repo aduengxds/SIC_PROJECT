@@ -1,5 +1,7 @@
 # Nhận diện & đếm nhà ngập từ ảnh flycam
 
+**Tiếng Việt** · [English](README.en.md) · [中文](README.zh.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [日本語](README.ja.md)
+
 ## Nhóm thực hiện
 
 | Thành viên | GitHub |
