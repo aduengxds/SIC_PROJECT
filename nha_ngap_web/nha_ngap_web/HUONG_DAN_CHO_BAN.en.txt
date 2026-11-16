@@ -1,0 +1,247 @@
+=======================================================================
+  FLOODED HOUSE DETECTION v0.0.2 — GUIDE FOR RECIPIENTS
+=======================================================================
+
+English translation of HUONG_DAN_CHO_BAN.txt in the same folder.
+If the two versions differ, the Vietnamese original is authoritative.
+
+Thank you for accepting this package. It is a small web app that runs on
+your own machine: you pick an image, it draws a box around every house and
+labels it flooded / not flooded / partially flooded. Everything runs on
+your machine — no image ever leaves it.
+
+You do NOT have to edit a single line of code. Just run the 2 .bat files in order.
+
+-----------------------------------------------------------------------
+1. WHAT YOU NEED BEFORE STARTING
+-----------------------------------------------------------------------
+
+  [ ] Windows 10 or 11, 64-bit.
+  [ ] An NVIDIA GPU (verified on RTX 2050; RTX 30xx / 40xx run
+      better). Without a GPU it still runs — see section 6.
+  [ ] Python 3.13, 64-bit, from https://www.python.org/downloads/
+        - It MUST be 3.13. The bundled installer has the right build
+          for Python 3.13; Python 3.12 and 3.14 CANNOT install it.
+        - During installation, tick "Add python.exe to PATH".
+        - Do NOT use the Microsoft Store build: it has no "py"
+          command, which CAI_DAT.bat relies on.
+  [ ] A recent NVIDIA driver: the project's CUDA 13.2 needs driver R580
+      or newer. Update through NVIDIA App or geforce.com.
+  [ ] ~6-7 GB of free disk space.
+  [ ] Internet for the first installation (about 2.5 GB download).
+
+-----------------------------------------------------------------------
+2. STEP 1 — UNPACK
+-----------------------------------------------------------------------
+
+Unpack the whole folder somewhere of your own, for example:
+
+    D:\nha_ngap_web
+
+THREE CONDITIONS about the location — the most important part of this file:
+
+    (a) The path MUST be ASCII: no Vietnamese accents, no spaces.
+        Do not put it on a Desktop or OneDrive folder with a Vietnamese
+        name, and do not put it in "C:\Program Files" (needs write
+        access). Reason: cmd.exe does not handle accented paths
+        reliably, and the web app needs to write into its own folder.
+
+    (b) Unpack the WHOLE folder, do not skip files. The app needs
+        exactly 3 files inside the "checkpoints" sub-folder:
+            checkpoints\work_det\cau_hinh_detector.py
+            checkpoints\work_det\work_aug\best_coco_bbox_mAP_epoch_4.pth
+            checkpoints\work_cls\convnext_tiny_3lop.pth
+        Missing any one of the three and the app will not start.
+
+    (c) Do NOT move the folder elsewhere after installation. If you
+        must move it, delete the "venv" folder and run CAI_DAT.bat
+        again (takes 10-30 minutes).
+
+After unpacking, the folder should look like this:
+
+    D:\nha_ngap_web\
+        CAI_DAT.bat            <-- run this first
+        CHAY_WEB.bat           <-- then run this to open the web app
+        HUONG_DAN_CHO_BAN.txt  <-- the file you are reading
+        KET_LUAN_KIEM_CHUNG.txt
+        duong_dan.py  va_moi_truong.py  loi_suy_luan.py
+        ung_dung.py   kiem_tra_moi_truong.py  requirements.txt
+        giao_dien\index.html
+        checkpoints\...
+        test\...               <-- 203 images so you can verify it yourself
+
+-----------------------------------------------------------------------
+3. STEP 2 — RUN CAI_DAT.bat (10-30 minutes)
+-----------------------------------------------------------------------
+
+Double-click CAI_DAT.bat and leave it alone. It will:
+
+    - Create a dedicated Python environment in the "venv" folder.
+    - Download torch + torchvision, CUDA build (~1.9 GB) from pytorch.org.
+    - Download mmcv (the wheel for Windows / Python 3.13 / CUDA 13.2)
+      from GitHub.
+    - Download mmdet, mmengine, FastAPI, uvicorn, pillow.
+    - Run the environment check at the end.
+
+The first run takes 10-30 minutes depending on your connection. Watch the
+[n/6] counter move — that is normal, it is not stuck.
+
+If the network drops midway: just run CAI_DAT.bat again. It skips the steps
+that already finished instead of starting over.
+
+At the end, if you see the line:
+
+    CA X BUOC XANH.
+
+everything is ready. (There is a small typo at the end of that message —
+"CA 5 BUOC XANH" while there are in fact 6 steps — that is wording only,
+not an error.)
+
+CAI_DAT.bat also runs the first environment check, which takes about a minute.
+
+-----------------------------------------------------------------------
+4. STEP 3 — RUN CHAY_WEB.bat
+-----------------------------------------------------------------------
+
+Double-click CHAY_WEB.bat. Wait 10-25 seconds for the model to load, then
+the browser opens http://127.0.0.1:8000 by itself.
+
+The first time, Windows Defender shows a "Windows Security Alert" dialog
+asking for permission — click Allow access. If you click Cancel by mistake
+the app still runs on your machine; other machines on the same Wi-Fi simply
+cannot reach it. CHAY_WEB.bat contains instructions for adding the firewall
+rule manually (in the notes at the end of the file).
+
+To stop the app: press Ctrl+C in the black window, or close that window.
+
+A few options, typed right after the .bat file name:
+
+    CHAY_WEB.bat --cong 8080      If port 8000 is taken by another
+                                  program ("Address already in use").
+    CHAY_WEB.bat --cpu            Force CPU execution, skip the GPU.
+                                  Much slower but ALWAYS correct.
+
+-----------------------------------------------------------------------
+5. VERIFY IT YOURSELF (no need to take our word for it)
+-----------------------------------------------------------------------
+
+The package includes 203 test images and a regression check whose result
+was recorded at training time. Run it again and compare:
+
+    venv\Scripts\python.exe kiem_tra_moi_truong.py --dem-test
+
+(takes 2-3 minutes; remember to "cd" into the unpacked folder first, or use
+the full path). The check only COUNTS the houses the model predicts; it does
+NOT use hand-made labels — in keeping with the project's constraints.
+
+Expected result at threshold 0.30:
+
+    Flooded            890
+    Not-Flooded       1604
+    Partially-Flooded 1793
+    TOTAL             4287
+
+IF IT IS OFF BY A FEW BOXES, DO NOT PANIC. That is normal, not a bug.
+Reason: 207 boxes sit exactly 1/100 of a point away from the threshold, so
+a single box flipping changes the total by 1. A different GPU or a different
+OpenCV version flips them like that. The author himself got 4288 instead of
+4287 when rerunning the web app — off by +1 on 4287, i.e. 0.023%. See
+section 4 of the accompanying KET_LUAN_KIEM_CHUNG.txt for the full figures.
+
+If the difference is LARGE (tens of boxes), then there really is a problem —
+take a screenshot and send it to the author.
+
+-----------------------------------------------------------------------
+6. IF YOUR MACHINE HAS NO GPU, OR AN OLD ONE
+-----------------------------------------------------------------------
+
+The app still runs. Before starting, it tries a small computation on the
+GPU. If the GPU cannot do it (common on GTX 10xx and older — the Pascal
+architecture), the app switches to CPU and prints a clear warning.
+
+    - Results are EXACTLY the same as on GPU. It is only MUCH SLOWER:
+      measured on the author's machine, one 640x640 image takes ~84
+      seconds on CPU versus ~1.8 seconds on GPU. The app does NOT hang —
+      just wait, do not close it midway.
+    - To silence that warning: CHAY_WEB.bat --cpu
+
+GPU generations known to work well: GTX 1650 (sm_75), RTX 20xx/30xx
+(sm_86), RTX 40xx (sm_89 — not in the wheel's list but still works through
+backward compatibility).
+
+-----------------------------------------------------------------------
+7. WHEN SOMETHING GOES WRONG — READ THIS TABLE FIRST
+-----------------------------------------------------------------------
+
+  Symptom                          | Cause & fix
+  ---------------------------------|--------------------------------
+  CAI_DAT.bat says "Khong tim     | Python 3.13 is not installed, or
+  thay Python 3.13"                | you installed the Microsoft Store
+                                   | build. Reinstall from python.org,
+                                   | tick "Add python.exe to PATH".
+  ---------------------------------|--------------------------------
+  "Cai mmcv that bai"              | This step downloads a 24 MB wheel
+                                   | from GitHub. Check the network,
+                                   | open https://github.com/MiroPsota/
+                                   | torch_packages_builder/releases in
+                                   | a browser, then run CAI_DAT.bat
+                                   | again.
+  ---------------------------------|--------------------------------
+  Missing file / "THIEU DUONG     | Unpacked incompletely or wrong
+  DAN BAT BUOC"                    | structure. Re-read section 2(b):
+                                   | all 3 files must be in checkpoints.
+  ---------------------------------|--------------------------------
+  "Address already in use"         | Port 8000 is taken. Rerun:
+                                   | CHAY_WEB.bat --cong 8080
+  ---------------------------------|--------------------------------
+  Black window shows a long error, | Take a full screenshot (including
+  or every result is "khong ngap" /| the lines above) and send it to
+  "ngap"                           | the author. Also see section 8.
+  ---------------------------------|--------------------------------
+  Browser does not open            | Open http://127.0.0.1:8000 yourself
+
+One more very common problem: the unpack folder has VIETNAMESE ACCENTS or
+a space. The errors are then hard to understand (cannot open file, or the
+app runs but reports missing checkpoints). The only fix is to unpack again
+into a clean ASCII folder and run CAI_DAT.bat again.
+
+-----------------------------------------------------------------------
+8. A FEW NUMBERS ABOUT THE MODEL (so you know how much to trust it)
+-----------------------------------------------------------------------
+
+This is a graduation project, not a commercial product. The real numbers,
+measured on the 203-image test set:
+
+    - Detector (Cascade R-CNN, 1 class "house"): mAP 0.3130.
+      It finds houses well, but houses smaller than ~32 pixels are often
+      missed — a known bottleneck of the project; higher resolution was
+      tried and did not help.
+
+    - State classifier (ConvNeXt-Tiny, 3 classes): accuracy 0.7195.
+      In other words, about 7 out of 10 houses it finds get the right
+      label. The rest may be confused between "flooded" and "partially
+      flooded" — those two states often look the same in the imagery.
+
+So: use it for reference; do not make it the sole basis for any important
+decision.
+
+The project does NOT use YOLO, and does NOT use any hand-made label (only
+the images and labels shipped with the dataset). If any document says
+otherwise, that document is wrong.
+
+-----------------------------------------------------------------------
+9. WHAT THIS PACKAGE CONTAINS
+-----------------------------------------------------------------------
+
+    code                 ~80 KB
+    checkpoints\         ~371 MB   (2 trained models)
+    test\                ~14 MB    (203 images + dataset labels)
+    ------------------------------------
+    TOTAL                ~385 MB
+
+It does not ship "venv" (the Python environment) because that is 2.5 GB and
+tied to one machine — CAI_DAT.bat recreates it for yours.
+
+Enjoy. If you get stuck, sending a screenshot is the fastest way to get help.
+
+=======================================================================

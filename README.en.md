@@ -148,6 +148,7 @@ Details: `nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt`.
 | [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | Per-metric AP for the epoch_20 checkpoint |
 | [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | Confusion matrix and accuracy of the classifier |
 | [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | Per-class count table for the epoch_20 checkpoint |
+| [`HUONG_DAN_CHO_BAN.en.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) | English translation of the installation guide |
 
 ## Repository layout
 
@@ -199,7 +200,7 @@ cd nha_ngap_web\nha_ngap_web
 :: create the venv and download ~2.5 GB, takes 10-30 minutes
 CAI_DAT.bat
 
-:: must pass all 5 steps
+:: must pass all 6 steps
 venv\Scripts\python.exe kiem_tra_moi_truong.py
 
 :: opens http://127.0.0.1:8000

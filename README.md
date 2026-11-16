@@ -148,6 +148,7 @@ Chi tiết: `nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt`.
 | [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | AP từng chỉ số của checkpoint epoch_20 |
 | [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | Confusion matrix và accuracy của classifier |
 | [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | Bảng đếm theo lớp của checkpoint epoch_20 |
+| [`HUONG_DAN_CHO_BAN.en.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) | Bản dịch tiếng Anh của hướng dẫn cài đặt |
 
 ## Cấu trúc thư mục
 
@@ -160,7 +161,7 @@ Chi tiết: `nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt`.
 └── nha_ngap_web/nha_ngap_web/           # ứng dụng chính
     ├── ung_dung.py                      # FastAPI: giao diện và vòng đời model
     ├── loi_suy_luan.py                  # suy luận thuần, không biết gì về web
-    ├── kiem_tra_moi_truong.py           # 5 bước kiểm tra môi trường, có cờ --dem-test
+    ├── kiem_tra_moi_truong.py           # 6 bước kiểm tra môi trường, có cờ --dem-test
     ├── giao_dien/index.html
     ├── checkpoints/                     # cau_hinh_detector.py (có sẵn); 2 file .pth (tự thêm)
     └── test/                            # 203 ảnh kiểm thử
@@ -199,7 +200,7 @@ cd nha_ngap_web\nha_ngap_web
 :: tạo venv, tải ~2,5 GB, mất 10-30 phút
 CAI_DAT.bat
 
-:: phải qua đủ 5 bước
+:: phải qua đủ 6 bước
 venv\Scripts\python.exe kiem_tra_moi_truong.py
 
 :: mở http://127.0.0.1:8000

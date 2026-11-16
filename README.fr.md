@@ -148,6 +148,7 @@ Détails : `nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt`.
 | [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | AP par métrique du point de contrôle epoch_20 |
 | [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | Matrice de confusion et exactitude du classifieur |
 | [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | Tableau de comptage par classe du point de contrôle epoch_20 |
+| [`HUONG_DAN_CHO_BAN.en.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) | Traduction anglaise du guide d'installation |
 
 ## Arborescence
 
@@ -160,7 +161,7 @@ Détails : `nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt`.
 └── nha_ngap_web/nha_ngap_web/           # l'application principale
     ├── ung_dung.py                      # FastAPI : interface et cycle de vie du modèle
     ├── loi_suy_luan.py                  # inférence pure, indépendante du web
-    ├── kiem_tra_moi_truong.py           # contrôle d'environnement en 5 étapes, option --dem-test
+    ├── kiem_tra_moi_truong.py           # contrôle d'environnement en 6 étapes, option --dem-test
     ├── giao_dien/index.html
     ├── checkpoints/                     # cau_hinh_detector.py (fourni) ; 2 fichiers .pth (à ajouter)
     └── test/                            # 203 images de test
@@ -199,7 +200,7 @@ cd nha_ngap_web\nha_ngap_web
 :: crée le venv et télécharge ~2,5 Go, 10 à 30 minutes
 CAI_DAT.bat
 
-:: les 5 étapes doivent toutes réussir
+:: les 6 étapes doivent toutes réussir
 venv\Scripts\python.exe kiem_tra_moi_truong.py
 
 :: ouvre http://127.0.0.1:8000
@@ -215,6 +216,13 @@ venv\Scripts\python.exe kiem_tra_moi_truong.py --dem-test
 ```
 
 L'application expose quatre points d'entrée : `GET /`, `GET /api/thong_tin`, `POST /api/du_doan`, `POST /api/export` (qui enregistre PNG/JPG/CSV dans `export/`). Le modèle est chargé une seule fois au démarrage ; comme `mmdet` n'est pas thread-safe et que le GPU ne dispose que de 4 Go, les requêtes sont mises en file plutôt que traitées en parallèle.
+
+### Dépannage rapide
+
+- Le chemin d'installation doit être en ASCII (sans accents ni espaces), sinon les erreurs sont difficiles à interpréter.
+- Port 8000 occupé : `CHAY_WEB.bat --cong 8080`.
+- Sans GPU compatible, l'application fonctionne sur CPU : résultats identiques, environ 50 fois plus lente. `--cpu` supprime l'avertissement.
+- Guide complet : [English](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) · [Tiếng Việt](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.txt).
 
 ## Limites connues
 

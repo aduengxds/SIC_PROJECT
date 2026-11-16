@@ -150,6 +150,7 @@ AP 在 `score_thr` 0.05 下测量，而计数使用 0.30 阈值——两者量�
 | [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | epoch_20 检查点的各项 AP |
 | [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | 分类器的混淆矩阵与准确率 |
 | [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | epoch_20 检查点的按类别计数表 |
+| [`HUONG_DAN_CHO_BAN.en.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) | 安装指南的英文译本 |
 
 ## 目录结构
 
@@ -201,7 +202,7 @@ cd nha_ngap_web\nha_ngap_web
 :: 创建 venv 并下载约 2.5 GB，耗时 10-30 分钟
 CAI_DAT.bat
 
-:: 必须通过全部 5 个步骤
+:: 必须通过全部 6 个步骤
 venv\Scripts\python.exe kiem_tra_moi_truong.py
 
 :: 打开 http://127.0.0.1:8000
@@ -217,6 +218,13 @@ venv\Scripts\python.exe kiem_tra_moi_truong.py --dem-test
 ```
 
 Web 应用有四个接口：`GET /`、`GET /api/thong_tin`、`POST /api/du_doan`、`POST /api/export`（将 PNG/JPG/CSV 保存到 `export/`）。模型在启动时只加载一次；由于 `mmdet` 不是线程安全的且 GPU 只有 4 GB，请求会排队而不是并行执行。
+
+### 简短排错
+
+- 安装路径必须是 ASCII（不能有越南语声调符号或空格），否则会出现难以理解的错误。
+- 端口 8000 被占用时：`CHAY_WEB.bat --cong 8080`。
+- 没有可用的 GPU 时仍可在 CPU 上运行：结果相同，但慢约 50 倍；`--cpu` 可关闭警告。
+- 完整指南：[English](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) · [Tiếng Việt](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.txt)。
 
 ## 已知限制
 

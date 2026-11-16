@@ -150,6 +150,7 @@ AP는 `score_thr` 0.05에서 측정하고 계수는 0.30 임계값을 사용합�
 | [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | epoch_20 체크포인트의 지표별 AP |
 | [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | 분류기 혼동 행렬과 정확도 |
 | [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | epoch_20 체크포인트의 클래스별 계수 표 |
+| [`HUONG_DAN_CHO_BAN.en.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) | 설치 안내서의 영어판 |
 
 ## 디렉터리 구조
 
@@ -162,7 +163,7 @@ AP는 `score_thr` 0.05에서 측정하고 계수는 0.30 임계값을 사용합�
 └── nha_ngap_web/nha_ngap_web/           # 주 애플리케이션
     ├── ung_dung.py                      # FastAPI: 화면과 모델 수명 주기
     ├── loi_suy_luan.py                  # 순수 추론, 웹과 무관
-    ├── kiem_tra_moi_truong.py           # 5단계 환경 점검, --dem-test 플래그
+    ├── kiem_tra_moi_truong.py           # 6단계 환경 점검, --dem-test 플래그
     ├── giao_dien/index.html
     ├── checkpoints/                     # cau_hinh_detector.py(포함); .pth 2개는 직접 추가
     └── test/                            # 테스트 이미지 203장
@@ -201,7 +202,7 @@ cd nha_ngap_web\nha_ngap_web
 :: venv 생성 및 약 2.5 GB 다운로드, 10-30분 소요
 CAI_DAT.bat
 
-:: 5단계를 모두 통과해야 함
+:: 6단계를 모두 통과해야 함
 venv\Scripts\python.exe kiem_tra_moi_truong.py
 
 :: http://127.0.0.1:8000 열림
@@ -217,6 +218,13 @@ venv\Scripts\python.exe kiem_tra_moi_truong.py --dem-test
 ```
 
 웹 앱에는 네 개의 엔드포인트가 있습니다: `GET /`, `GET /api/thong_tin`, `POST /api/du_doan`, `POST /api/export`(PNG/JPG/CSV를 `export/`에 저장). 모델은 시작 시 한 번만 로드되며, `mmdet`이 스레드 안전하지 않고 GPU가 4 GB뿐이므로 요청은 병렬이 아니라 대기열로 처리됩니다.
+
+### 간단한 문제 해결
+
+- 설치 경로는 반드시 ASCII(악센트·공백 없음)여야 합니다. 지키지 않으면 원인을 알기 어려운 오류가 납니다.
+- 8000 포트가 사용 중이면 `CHAY_WEB.bat --cong 8080`.
+- 호환 GPU가 없어도 CPU로 동작합니다(결과는 동일, 약 50배 느림). 경고를 끄려면 `--cpu`.
+- 전체 안내서: [English](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) · [Tiếng Việt](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.txt).
 
 ## 알려진 한계
 

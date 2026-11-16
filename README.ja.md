@@ -150,6 +150,7 @@ Web アプリ自身のコード（`best_ep4`、しきい値 0.30）で 203 枚�
 | [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | epoch_20 チェックポイントの指標別 AP |
 | [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | 分類器の混同行列と精度 |
 | [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | epoch_20 チェックポイントのクラス別計数表 |
+| [`HUONG_DAN_CHO_BAN.en.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) | インストールガイドの英語版 |
 
 ## ディレクトリ構成
 
@@ -162,7 +163,7 @@ Web アプリ自身のコード（`best_ep4`、しきい値 0.30）で 203 枚�
 └── nha_ngap_web/nha_ngap_web/           # メインアプリケーション
     ├── ung_dung.py                      # FastAPI: 画面とモデルのライフサイクル
     ├── loi_suy_luan.py                  # 純粋な推論、Web に依存しない
-    ├── kiem_tra_moi_truong.py           # 5 段階の環境チェック、--dem-test フラグ付き
+    ├── kiem_tra_moi_truong.py           # 6 段階の環境チェック、--dem-test フラグ付き
     ├── giao_dien/index.html
     ├── checkpoints/                     # cau_hinh_detector.py（同梱）; .pth 2 つは自分で追加
     └── test/                            # テスト画像 203 枚
@@ -201,7 +202,7 @@ cd nha_ngap_web\nha_ngap_web
 :: venv を作成し約 2.5 GB をダウンロード、10〜30 分
 CAI_DAT.bat
 
-:: 5 段階すべてを通過すること
+:: 6 段階すべてを通過すること
 venv\Scripts\python.exe kiem_tra_moi_truong.py
 
 :: http://127.0.0.1:8000 を開く
@@ -217,6 +218,13 @@ venv\Scripts\python.exe kiem_tra_moi_truong.py --dem-test
 ```
 
 Web アプリには 4 つのエンドポイントがあります: `GET /`、`GET /api/thong_tin`、`POST /api/du_doan`、`POST /api/export`（PNG/JPG/CSV を `export/` に保存）。モデルは起動時に一度だけ読み込まれ、`mmdet` がスレッドセーフでなく GPU も 4 GB しかないため、リクエストは並列ではなくキューで処理されます。
+
+### トラブルの要点
+
+- インストール先のパスは ASCII のみ（アクセント記号・空白は不可）。守らないと原因の分かりにくいエラーになる。
+- ポート 8000 が使用中なら `CHAY_WEB.bat --cong 8080`。
+- 対応 GPU がなくても CPU で動作する（結果は同じ、約 50 倍遅い）。警告を消すには `--cpu`。
+- 詳細なガイド: [English](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.en.txt) · [Tiếng Việt](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.txt)。
 
 ## 既知の制約
 
