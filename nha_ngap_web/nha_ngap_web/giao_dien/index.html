@@ -2203,7 +2203,8 @@ tbody tr:last-child td { border-bottom: 0; }
             <span class="note">Bấm một dòng để đánh dấu trên ảnh · dữ liệu minh hoạ</span>
             <div style="display:flex;gap:5px;flex-wrap:wrap">
               <button class="btn-small" type="button" data-export="csv"><svg class="ic"><use href="#i-download"/></svg>CSV</button>
-              <button class="btn-small" type="button" data-export="png"><svg class="ic"><use href="#i-image"/></svg>Ảnh</button>
+              <button class="btn-small" type="button" data-export="png"><svg class="ic"><use href="#i-image"/></svg>PNG</button>
+              <button class="btn-small" type="button" data-export="jpg"><svg class="ic"><use href="#i-image"/></svg>JPG</button>
               <button class="btn-small" type="button" data-export="pdf"><svg class="ic"><use href="#i-download"/></svg>Báo cáo</button>
             </div>
           </div>
@@ -2324,7 +2325,7 @@ tbody tr:last-child td { border-bottom: 0; }
     <span class="sep"></span>
     <span><b class="js-total">18</b> nhà</span>
     <span class="spacer"></span>
-    <span class="disclaimer">Bản mockup · dữ liệu minh hoạ từ ảnh mẫu</span>
+    <span class="disclaimer">Hệ thống AI thật · Cascade R-CNN + ConvNeXt-Tiny</span>
   </footer>
 </div>
 
@@ -2334,8 +2335,8 @@ tbody tr:last-child td { border-bottom: 0; }
   <div class="modal-card">
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="helpTitle">Cách xem bản thử</div>
-        <div class="modal-sub">Bản mockup tương tác · không phải app thật</div>
+        <div class="modal-title" id="helpTitle">Hướng dẫn sử dụng</div>
+        <div class="modal-sub">Hệ thống nhận diện nhà ngập · Tích hợp AI thật & Xuất kết quả</div>
       </div>
       <button class="icon-btn modal-close" type="button" data-close="helpModal" aria-label="Đóng hướng dẫn">
         <svg class="ic"><use href="#i-x"/></svg>
@@ -2377,8 +2378,8 @@ tbody tr:last-child td { border-bottom: 0; }
 
     <ul class="help-list">
       <li>Menu <b>DEMO</b> đổi giữa bốn trạng thái: kết quả, đang phân tích, chưa có ảnh, lỗi.</li>
-      <li>Nút <b>Phân tích lại</b> mô phỏng 1,8 giây xử lý rồi trả về kết quả.</li>
-      <li>Nút <b>Xuất</b> chỉ hiển thị thông báo — bản mockup chưa nối chức năng tải file.</li>
+      <li>Nút <b>Phân tích lại</b> gửi ảnh lên mô hình AI thật để nhận diện.</li>
+      <li>Khi chạy ứng dụng qua máy chủ, ảnh PNG/JPG và danh sách CSV được lưu riêng trong <code>export/png/</code>, <code>export/jpg/</code> và <code>export/csv/</code>; Báo cáo mở hộp thoại in để lưu PDF.</li>
     </ul>
 
     <div class="help-note">
@@ -2459,7 +2460,8 @@ tbody tr:last-child td { border-bottom: 0; }
     p1Only: false,
     appState: "result",
     loadingTimer: null,
-    currentFile: null
+    currentFile: null,
+    anhKetQua: null
   };
 
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
@@ -2885,6 +2887,7 @@ tbody tr:last-child td { border-bottom: 0; }
         }
 
         if (data.anh_ket_qua) {
+          state.anhKetQua = data.anh_ket_qua;
           $$(".stage > img:not(.base), .after-layer img, .side-frame img:last-child, #lightboxModal img").forEach(function(img) {
             img.src = data.anh_ket_qua;
           });
@@ -3142,12 +3145,179 @@ tbody tr:last-child td { border-bottom: 0; }
       if (el) el.addEventListener("click", pickFile);
     });
 
+    function saveExportFile(blob, filename, message) {
+      var formData = new FormData();
+      formData.append("tep", blob, filename);
+      return fetch("/api/export", { method: "POST", body: formData })
+        .then(function(res) {
+          return res.json().catch(function() {
+            throw new Error("Máy chủ trả về dữ liệu không đọc được (HTTP " + res.status + ")");
+          }).then(function(data) {
+            if (!res.ok) throw new Error(data.detail || ("HTTP " + res.status));
+            return data;
+          });
+        })
+        .then(function(data) {
+          toast(message + " Đã lưu vào export/" + data.folder + "/" + data.filename + ".");
+        })
+        .catch(function(err) {
+          console.error("Export save failed:", err);
+          toast("Không thể lưu vào thư mục export: " + err.message);
+        });
+    }
+
+    function exportAnalyzedImage(format) {
+      var imageFormat = format === "jpg" ? "jpg" : "png";
+      var mimeType = imageFormat === "jpg" ? "image/jpeg" : "image/png";
+      var isMockupResult = !state.anhKetQua && !state.currentFile && state.appState === "result";
+      if (!state.anhKetQua && !isMockupResult) {
+        toast("Chưa có ảnh kết quả phân tích để tải xuống. Vui lòng phân tích ảnh trước.");
+        return;
+      }
+
+      var targetImg = $(".after-layer img");
+      var imgSrc = state.anhKetQua || (targetImg && targetImg.src);
+      if (!imgSrc) {
+        toast("Không tìm thấy ảnh kết quả để tải xuống.");
+        return;
+      }
+
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || img.width || 640;
+        canvas.height = isMockupResult ? Math.round(canvas.width * 3 / 4) : (img.naturalHeight || img.height || 480);
+        var ctx = canvas.getContext("2d");
+        if (!ctx) {
+          toast("Không thể tạo ảnh " + imageFormat.toUpperCase() + " để tải xuống.");
+          return;
+        }
+        if (isMockupResult) {
+          var scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+          var drawWidth = img.naturalWidth * scale;
+          var drawHeight = img.naturalHeight * scale;
+          ctx.drawImage(img, (canvas.width - drawWidth) / 2, (canvas.height - drawHeight) / 2, drawWidth, drawHeight);
+        } else {
+          ctx.drawImage(img, 0, 0);
+        }
+
+        if (isMockupResult && state.showBoxes) {
+          var boxColors = {
+            P1: getComputedStyle(document.documentElement).getPropertyValue("--box-p1").trim(),
+            P2: getComputedStyle(document.documentElement).getPropertyValue("--box-p2").trim(),
+            P3: getComputedStyle(document.documentElement).getPropertyValue("--box-p3").trim()
+          };
+          var lineWidth = Math.max(2, canvas.width / 320);
+          visibleByThreshold().forEach(function(h) {
+            var x = h.x * canvas.width / 100;
+            var y = h.y * canvas.height / 100;
+            var width = h.w * canvas.width / 100;
+            var height = h.h * canvas.height / 100;
+            ctx.strokeStyle = boxColors[h.cls];
+            ctx.lineWidth = lineWidth;
+            ctx.strokeRect(x, y, width, height);
+            if (state.showLabels) {
+              var label = h.cls + (state.showConf ? " · " + fmt(h.conf) : "");
+              var fontSize = Math.max(12, canvas.width / 64);
+              var tagHeight = fontSize + 8;
+              ctx.font = "600 " + fontSize + "px Arial, sans-serif";
+              var tagWidth = ctx.measureText(label).width + 12;
+              var tagY = h.y < 8 ? y + lineWidth : Math.max(0, y - tagHeight);
+              ctx.fillStyle = boxColors[h.cls];
+              ctx.fillRect(x, tagY, tagWidth, tagHeight);
+              ctx.fillStyle = "#fff";
+              ctx.textBaseline = "middle";
+              ctx.fillText(label, x + 6, tagY + tagHeight / 2);
+            }
+          });
+        }
+
+        canvas.toBlob(function(blob) {
+          if (!blob) {
+            toast("Không thể tạo ảnh " + imageFormat.toUpperCase() + " để tải xuống.");
+            return;
+          }
+          var origName = state.currentFile ? state.currentFile.name.replace(/\.[^/.]+$/, "") : "flood";
+          saveExportFile(blob, "ket_qua_nhan_dien_" + origName + "." + imageFormat, "Đã xuất ảnh " + imageFormat.toUpperCase() + ".");
+        }, mimeType, imageFormat === "jpg" ? 0.9 : undefined);
+      };
+      img.onerror = function() {
+        toast("Không thể tải ảnh kết quả phân tích để xuất.");
+      };
+      img.src = imgSrc;
+    }
+
+    function exportCSV() {
+      var housesToExport = visibleByThreshold();
+      if (housesToExport.length === 0) {
+        toast("Chưa có dữ liệu nhà để xuất CSV. Vui lòng phân tích ảnh trước.");
+        return;
+      }
+      var csvContent = "\uFEFFID,TrangThai,DoTinCay(%),X(%),Y(%),W(%),H(%)\n";
+      housesToExport.forEach(function (h) {
+        var labelText = LABEL[h.cls] || h.cls;
+        csvContent += [h.id, '"' + labelText + '"', Math.round(h.conf * 100), h.x, h.y, h.w, h.h].join(",") + "\n";
+      });
+      var origName = state.currentFile ? state.currentFile.name.replace(/\.[^/.]+$/, "") : "ket_qua";
+      saveExportFile(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }), "danh_sach_nha_" + origName + ".csv", "Đã xuất danh sách CSV.");
+    }
+
+    function exportReport() {
+      var houses = visibleByThreshold();
+      if (houses.length === 0) {
+        toast("Chưa có dữ liệu báo cáo. Vui lòng thực hiện phân tích ảnh trước.");
+        return;
+      }
+      var counts = countByClass(houses);
+      var origName = state.currentFile ? state.currentFile.name.replace(/\.[^/.]+$/, "") : "ket_qua_nhan_dien";
+      var sourceName = state.currentFile ? state.currentFile.name : "Ảnh mẫu / Mặc định";
+      var escapeHtml = function(value) {
+        return String(value).replace(/[&<>"']/g, function(char) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char];
+        });
+      };
+
+      var reportHtml = "<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Báo cáo Nhận diện Nhà Ngập - " + escapeHtml(origName) + "</title>";
+      reportHtml += "<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap' rel='stylesheet'>";
+      reportHtml += "<style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;background:#fff;color:#0a0a0a;font:10pt/1.55 'Be Vietnam Pro','Noto Sans',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report{max-width:1000px;margin:0 auto}.report-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 0 15px;border-bottom:1px solid #e5e5e5}.brand{display:flex;align-items:center;gap:11px}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:#0a0a0a;color:#fff}.brand-mark svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.brand-title{font-size:13pt;font-weight:700;letter-spacing:-.03em}.version{margin-left:5px;padding:2px 6px;border:1px solid #e5e5e5;border-radius:999px;color:#737373;font:8pt 'JetBrains Mono',monospace}.brand-sub,.report-kicker,.meta-label{color:#737373;font-size:8pt}.report-kicker{font-weight:600;letter-spacing:.08em;text-align:right}.report-title{margin:23px 0 5px;font-size:21pt;line-height:1.25;letter-spacing:-.04em}.report-subtitle{margin:0 0 18px;color:#525252;font-size:9pt}.meta-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:9px;margin:0 0 20px}.meta-card,.metric{border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px}.meta-label,.metric-label{display:block;margin-bottom:4px;color:#737373;font-size:8pt}.meta-value{font-size:9pt;font-weight:600;overflow-wrap:anywhere}.section-title{margin:0 0 9px;font-size:11pt;font-weight:700}.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:22px}.metric{border-top:2px solid #0a0a0a}.metric-p1{border-top-color:#dc2626}.metric-p2{border-top-color:#d97706}.metric-p3{border-top-color:#059669}.metric-value{font:600 19pt 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}.table-title{display:flex;align-items:center;gap:8px;margin:0 0 9px;font-size:11pt;font-weight:700}.table-title:before{content:'';width:3px;height:16px;border-radius:999px;background:#0a0a0a}.data-table{width:100%;border-collapse:collapse;font-size:8.5pt}.data-table thead{display:table-header-group}.data-table th{padding:8px 7px;background:#f5f5f5;color:#525252;font-size:7.5pt;font-weight:600;text-align:left;border-top:1px solid #e5e5e5;border-bottom:1px solid #d4d4d4}.data-table td{padding:7px;border-bottom:1px solid #e5e5e5;vertical-align:middle}.data-table tbody tr:nth-child(even){background:#fafafa}.mono{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}.badge{display:inline-block;min-width:25px;margin-right:5px;padding:2px 5px;border-radius:5px;font-size:7.5pt;font-weight:700;text-align:center}.badge-p1{background:#fee2e2;color:#b91c1c}.badge-p2{background:#fef3c7;color:#b45309}.badge-p3{background:#d1fae5;color:#047857}.report-footer{display:flex;justify-content:space-between;gap:16px;margin-top:18px;padding-top:9px;border-top:1px solid #e5e5e5;color:#737373;font-size:7.5pt}.report-footer strong{color:#0a0a0a}@media(max-width:640px){.report{padding:16px}.meta-grid{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-kicker{font-size:7pt}}@media print{.report{max-width:none}.report-header,.meta-grid,.summary-grid,.table-title{break-inside:avoid}.data-table tr{break-inside:avoid;page-break-inside:avoid}.data-table th,.data-table td{padding:6px 5px}.report-footer{break-inside:avoid}}</style></head><body>";
+      reportHtml += "<main class='report'>";
+      reportHtml += "<header class='report-header'><div class='brand'><span class='brand-mark'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z'/><path d='M9 21v-7h6v7M2 17c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 8 0'/></svg></span><span><span class='brand-title'>Nhận diện Nhà Ngập</span><span class='version'>v0.0.2</span><br><span class='brand-sub'>Hỗ trợ cứu hộ lũ · ảnh trên không</span></span></div><span class='report-kicker'>BÁO CÁO PHÂN TÍCH</span></header>";
+      reportHtml += "<h1 class='report-title'>Kết quả nhận diện nhà ngập</h1><p class='report-subtitle'>Tổng hợp các phát hiện theo ngưỡng tin cậy và trạng thái ngập.</p>";
+      reportHtml += "<section class='meta-grid'><div class='meta-card'><span class='meta-label'>Tệp ảnh</span><span class='meta-value'>" + escapeHtml(sourceName) + "</span></div><div class='meta-card'><span class='meta-label'>Thời gian xuất</span><span class='meta-value'>" + escapeHtml(new Date().toLocaleString("vi-VN")) + "</span></div><div class='meta-card'><span class='meta-label'>Ngưỡng tin cậy</span><span class='meta-value mono'>≥ " + Math.round(state.threshold * 100) + "%</span></div></section>";
+      reportHtml += "<section><h2 class='section-title'>Thống kê tổng quan</h2><div class='summary-grid'>";
+      reportHtml += "<div class='metric'><span class='metric-label'>Tổng phát hiện</span><strong class='metric-value'>" + counts.total + "</strong></div>";
+      reportHtml += "<div class='metric metric-p1'><span class='metric-label'>P1 · Ngập hoàn toàn</span><strong class='metric-value'>" + counts.P1 + "</strong></div>";
+      reportHtml += "<div class='metric metric-p2'><span class='metric-label'>P2 · Ngập một phần</span><strong class='metric-value'>" + counts.P2 + "</strong></div>";
+      reportHtml += "<div class='metric metric-p3'><span class='metric-label'>P3 · Không ngập</span><strong class='metric-value'>" + counts.P3 + "</strong></div>";
+      reportHtml += "</div></section><section><h2 class='table-title'>Danh sách chi tiết nhà</h2>";
+      reportHtml += "<table class='data-table'><thead><tr><th>ID</th><th>Trạng thái</th><th>Độ tin cậy</th><th>X (%)</th><th>Y (%)</th><th>W (%)</th><th>H (%)</th></tr></thead><tbody>";
+      houses.forEach(function(h) {
+        reportHtml += "<tr><td class='mono'>#" + String(h.id).padStart(2, "0") + "</td><td><span class='badge badge-" + h.cls.toLowerCase() + "'>" + escapeHtml(h.cls) + "</span>" + escapeHtml(LABEL[h.cls] || h.cls) + "</td><td class='mono'>" + Math.round(h.conf * 100) + "%</td><td class='mono'>" + h.x + "</td><td class='mono'>" + h.y + "</td><td class='mono'>" + h.w + "</td><td class='mono'>" + h.h + "</td></tr>";
+      });
+      reportHtml += "</tbody></table></section><footer class='report-footer'><span><strong>Nhận diện Nhà Ngập</strong> · v0.0.2</span><span>Kết quả hỗ trợ ra quyết định, không thay thế khảo sát thực địa.</span></footer></main></body></html>";
+
+      var printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        toast("Trình duyệt đã chặn cửa sổ báo cáo. Hãy cho phép cửa sổ bật lên để xuất PDF.");
+        return;
+      }
+      printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+      };
+      printWindow.document.open();
+      printWindow.document.write(reportHtml);
+      printWindow.document.close();
+      toast("Đã mở hộp thoại in. Chọn “Lưu dưới dạng PDF” để tải báo cáo.");
+    }
+
     function handleFile(f) {
       if (!f || !f.type.startsWith("image/")) {
         toast("Vui lòng chọn tệp ảnh hợp lệ (JPG, PNG, WEBP).");
         return;
       }
       state.currentFile = f;
+      state.anhKetQua = null;
       var url = URL.createObjectURL(f);
 
       var thumbImg = $("#thumbImg");
@@ -3215,12 +3385,21 @@ tbody tr:last-child td { border-bottom: 0; }
       if (f) handleFile(f);
     });
 
-    $("#exportBtn").addEventListener("click", function () {
-      toast("Bản mockup — chức năng xuất sẽ có ở bản thật.");
-    });
+    $("#exportBtn").addEventListener("click", exportAnalyzedImage);
     $$("[data-export]").forEach(function (b) {
       b.addEventListener("click", function () {
-        toast("Bản mockup — xuất " + b.getAttribute("data-export").toUpperCase() + " sẽ có ở bản thật.");
+        var t = b.getAttribute("data-export");
+        if (t === "png") {
+          exportAnalyzedImage("png");
+        } else if (t === "jpg") {
+          exportAnalyzedImage("jpg");
+        } else if (t === "pdf") {
+          exportReport();
+        } else if (t === "csv") {
+          exportCSV();
+        } else {
+          exportAnalyzedImage();
+        }
       });
     });
 

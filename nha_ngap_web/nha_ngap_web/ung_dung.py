@@ -13,6 +13,7 @@ Ba endpoint:
     GET  /               -> giao_dien/index.html
     GET  /api/thong_tin  -> checkpoint kha dung, thu tu lop, ten GPU, mau
     POST /api/du_doan    -> multipart: anh, nguong, model -> JSON co anh base64
+    POST /api/export     -> multipart: tep -> luu PNG/JPG/CSV vao export/<dinh_dang>
 
 Hai quyet dinh quan trong:
 
@@ -166,6 +167,45 @@ def tai_file(file_name: str):
     if os.path.exists(p) and os.path.isfile(p):
         return FileResponse(p)
     raise HTTPException(404, 'Không tìm thấy tệp: %s' % file_name)
+
+
+@app.post('/api/export')
+def luu_tep_xuat(tep: UploadFile = File(...)):
+    ten = (tep.filename or '').replace('\\', '/').rsplit('/', 1)[-1].strip()
+    ten = ''.join('_' if c in '<>:"|?*' or ord(c) < 32 else c for c in ten).rstrip('. ')
+    phan_mo_rong = os.path.splitext(ten)[1].lower()
+    if not ten or phan_mo_rong not in ('.png', '.jpg', '.csv'):
+        raise HTTPException(400, 'Chỉ hỗ trợ xuất tệp PNG, JPG và CSV.')
+
+    raw = tep.file.read()
+    if not raw:
+        raise HTTPException(400, 'Tệp xuất không có dữ liệu.')
+    if phan_mo_rong == '.png' and not raw.startswith(b'\x89PNG\r\n\x1a\n'):
+        raise HTTPException(400, 'Dữ liệu ảnh xuất không phải PNG hợp lệ.')
+    if phan_mo_rong == '.jpg' and not raw.startswith(b'\xff\xd8\xff'):
+        raise HTTPException(400, 'Dữ liệu ảnh xuất không phải JPG hợp lệ.')
+
+    goc_xuat = os.path.abspath(os.path.join(
+        duong_dan.GOC_WEB, os.pardir, os.pardir, 'export'))
+    thu_muc_xuat = os.path.join(goc_xuat, phan_mo_rong[1:])
+    try:
+        os.makedirs(thu_muc_xuat, exist_ok=True)
+        ten_goc, _ = os.path.splitext(ten)
+        chi_so = 0
+        while True:
+            ten_luu = ten if chi_so == 0 else '%s_%d%s' % (
+                ten_goc, chi_so, phan_mo_rong)
+            duong_dan_tap = os.path.join(thu_muc_xuat, ten_luu)
+            try:
+                with open(duong_dan_tap, 'xb') as f:
+                    f.write(raw)
+                break
+            except FileExistsError:
+                chi_so += 1
+    except OSError as e:
+        raise HTTPException(500, 'Không lưu được tệp vào thư mục export: %s' % e)
+
+    return {'folder': phan_mo_rong[1:], 'filename': ten_luu}
 
 
 @app.get('/api/thong_tin')
