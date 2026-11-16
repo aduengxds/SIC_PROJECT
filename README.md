@@ -35,6 +35,14 @@ Khó khăn chính: nhà rất nhỏ, nước đục, nhãn `Flooded` / `Partiall
 
 Nguồn Roboflow, ảnh 640×640, ba lớp `Flooded`, `Not-Flooded`, `Partially-Flooded`. Tổng **2.778 ảnh · 44.967 box**; split lấy nguyên từ Roboflow, tập test chỉ dùng một lần khi báo cáo.
 
+| Thuộc tính | Giá trị |
+| --- | --- |
+| Dataset | [`merged_dataset` – v1](https://universe.roboflow.com/housedetectionclassification-jugwz/merged_dataset-dk0ch) |
+| Giấy phép | **CC BY 4.0** — dùng lại phải ghi nguồn |
+| Định dạng nhãn | COCO |
+| Tiền xử lý của Roboflow | Auto-orient (bỏ EXIF), resize 640×640 stretch; không augmentation |
+| Ngày export | 07/11/2024 |
+
 | Tập | Ảnh | Box | Ghi chú |
 | --- | --- | --- | --- |
 | Train | 2.116 | 33.145 | box < 32 px chiếm 10,7 %; < 64 px chiếm 48,5 % |
@@ -53,7 +61,29 @@ Hai model học hai việc khác nhau: detector chỉ trả lời "nhà ở đâ
 
 Pipeline mặc định: ảnh → detector → lọc score ≥ 0,30, tối đa 100 box → crop (+15 %) → ConvNeXt-Tiny → đếm theo lớp.
 
+## Huấn luyện lại
+
+Hai notebook chạy trên Colab (T4 là đủ), mở rồi bấm *Run all* từ trên xuống:
+
+- `nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/Colab_NhaNgap_v002_Aug.ipynb` — bản có augmentation, sinh ra `best_ep4` đang dùng
+- `nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/Colab_NhaNgap_v002.ipynb` — bản không augmentation; số của epoch 20 nằm trong `02_ket_qua_detector.txt`
+
+| Ô | Việc |
+| --- | --- |
+| 1–3 | kiểm tra môi trường, cài `mmcv` / `mmengine` / `mmdet`, kiểm tra CUDA ops chạy thật |
+| 4–5 | lấy dữ liệu, thống kê, chuyển sang hai định dạng: một lớp `house` cho detector và ba lớp gốc cho classifier |
+| 6–7 | train detector Cascade R-CNN, vẽ đường cong học, đánh giá mAP trên test |
+| 8 | train classifier ConvNeXt-Tiny trên crop của box thật |
+| 9–10 | chạy detect → classify → đếm trên 203 ảnh, tổng kết và ghi ra 4 file kết quả |
+| 11 | web Gradio để demo |
+
+Checkpoint lưu theo `save_best` trên valid mAP, nên `best_ep4` là **epoch 4**, không phải epoch cuối — đừng nhầm với `epoch_20` của bản không augmentation.
+
 ## Kết quả
+
+![Kết quả nhận diện trên ảnh flycam — khung đỏ là ngập, cam là ngập một phần, xanh là không ngập](export/mau_ket_qua.jpg)
+
+*Ảnh do chính bản web xuất ra (`export/mau_ket_qua.jpg`). Màu khung theo `loi_suy_luan.py`: đỏ = `Flooded`, cam = `Partially-Flooded`, xanh = `Not-Flooded`.*
 
 ### Detector
 
@@ -87,11 +117,35 @@ Lỗi tập trung ở cặp `Flooded` ↔ `Partially-Flooded` (606 + 440). Class
 
 Tổng của epoch_20 gần khớp nhãn nhưng đó là **triệt tiêu sai số**: ảnh này đếm dư, ảnh kia đếm thiếu, nên MAE từng ảnh vẫn gần 10. Vì vậy không nên đọc riêng con số tổng.
 
+## Định nghĩa chỉ số
+
+| Chỉ số | Định nghĩa / phạm vi |
+| --- | --- |
+| AP | COCO bbox, lấy trung bình qua IoU 0.50 : 0.05 : 0.95 |
+| AP50 / AP75 | IoU 0.50 / 0.75 |
+| AP_s / AP_m / AP_l | box có diện tích < 32² / 32²–96² / > 96² px² |
+| Accuracy (classifier) | đúng / tổng, đo trên 8.381 crop của tập valid |
+| End-to-end | classifier chạy trên box của detector khớp nhãn ở IoU 0.5 |
+| MAE | trung bình \|số đếm − số nhãn\| trên ảnh có nhà |
+
+AP đo ở `score_thr` 0,05 còn đếm dùng ngưỡng 0,30 — hai con số khác thang, đừng so trực tiếp AP với accuracy.
+
 ## Kiểm chứng
 
 Chạy lại toàn bộ 203 ảnh bằng chính code của bản web (`best_ep4`, ngưỡng 0,30) cho 4.288 box, lệch **+1 box trên 4.287 = 0,023 %**. Lớp `Flooded` khớp tuyệt đối 890/890; phần lệch nằm ở khác biệt OpenCV và kiến trúc GPU giữa Colab (Tesla T4) và máy chạy web (RTX 2050). Mốc 4.287 được hard-code thành `MOC_4287` trong `kiem_tra_moi_truong.py` để phép thử này tái lập được.
 
 Chi tiết: `nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt`.
+
+## Tài liệu trong repo
+
+| Tệp | Nội dung |
+| --- | --- |
+| [`HUONG_DAN_CHO_BAN.txt`](nha_ngap_web/nha_ngap_web/HUONG_DAN_CHO_BAN.txt) | Hướng dẫn cài đặt và chạy đầy đủ, kèm bảng lỗi hay gặp |
+| [`KET_LUAN_KIEM_CHUNG.txt`](nha_ngap_web/nha_ngap_web/KET_LUAN_KIEM_CHUNG.txt) | Biên bản phép thử 4.287 box, giải thích chỗ lệch +1 |
+| [`01_thong_ke_du_lieu.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/01_thong_ke_du_lieu.txt) | Thống kê 2.778 ảnh · 44.967 box theo từng tập |
+| [`02_ket_qua_detector.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/02_ket_qua_detector.txt) | AP từng chỉ số của checkpoint epoch_20 |
+| [`03_ket_qua_classifier.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/03_ket_qua_classifier.txt) | Confusion matrix và accuracy của classifier |
+| [`04_dem_nha_test.txt`](nha_ngap_v002_code/nha_ngap_v002_code/huan_luyen/04_dem_nha_test.txt) | Bảng đếm theo lớp của checkpoint epoch_20 |
 
 ## Cấu trúc thư mục
 
@@ -170,3 +224,14 @@ Web có bốn endpoint: `GET /`, `GET /api/thong_tin`, `POST /api/du_doan`, `POS
 - **Ngưỡng chưa tối ưu** — score chưa calibrate; nâng ngưỡng chỉ đổi precision/recall chứ không sửa gốc.
 - **Nhà nhỏ** — AP_s thấp do anchor nhỏ nhất và chỉ train một scale.
 - **Chưa dùng được cho production** — cần background class, calibration và split sạch trước khi đếm thực tế.
+
+## Hướng cải thiện
+
+| Ưu tiên | Việc | Vì sao |
+| --- | --- | --- |
+| P0 | Thêm lớp nền / reject class cho classifier | box rác đang bị gán thành nhà — nguồn đếm dư lớn nhất |
+| P0 | Calibrate score trên tập valid | ngưỡng 0,30 hiện không mang nghĩa xác suất |
+| P1 | Chọn ngưỡng theo count MAE thay vì F1 | mục tiêu của bài là đếm, không phải phát hiện |
+| P1 | Anchor / tiling / random scale cho nhà nhỏ | AP_s chỉ đạt 0,169 |
+| P2 | Dedupe và chia split theo nguồn | test sạch hơn thì số liệu mới đáng tin tuyệt đối |
+| P2 | Tăng `max_per_img` lên 150–200 | còn 2/203 ảnh bị cap ở 100 box |
