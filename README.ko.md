@@ -6,9 +6,11 @@
 
 | 이름 | GitHub |
 | --- | --- |
-| Phòng Duy Hoàng | [@21xDHoang](https://github.com/21xDHoang) |
-| Bùi Nam Khánh | [@NK-Lync](https://github.com/NK-Lync) |
-| Tào Hoàng Minh Vũ | [@aduengxds](https://github.com/aduengxds) |
+| Phùng Duy Hoàng（풍 주이 호앙） | [@21xDHoang](https://github.com/21xDHoang) |
+| Bùi Nam Khánh（부이 남 카인） | [@NK-Lync](https://github.com/NK-Lync) |
+| Tào Hoàng Minh Vũ（따오 호앙 민 부） | [@aduengxds](https://github.com/aduengxds) |
+
+*괄호 안은 한국어 표기이며, 공식 표기는 베트남어 원표기를 따릅니다.*
 
 2단계 파이프라인입니다. **검출기**가 항공 이미지에서 각 주택의 위치를 찾고, **분류기**가 잘라낸 영역의 상태를 판독한 뒤, 클래스별로 주택 수를 셉니다.
 

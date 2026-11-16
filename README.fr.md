@@ -6,7 +6,7 @@
 
 | Membre | GitHub |
 | --- | --- |
-| Phòng Duy Hoàng | [@21xDHoang](https://github.com/21xDHoang) |
+| Phùng Duy Hoàng | [@21xDHoang](https://github.com/21xDHoang) |
 | Bùi Nam Khánh | [@NK-Lync](https://github.com/NK-Lync) |
 | Tào Hoàng Minh Vũ | [@aduengxds](https://github.com/aduengxds) |
 

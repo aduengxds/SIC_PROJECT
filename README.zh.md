@@ -6,9 +6,11 @@
 
 | 成员 | GitHub |
 | --- | --- |
-| Phòng Duy Hoàng | [@21xDHoang](https://github.com/21xDHoang) |
-| Bùi Nam Khánh | [@NK-Lync](https://github.com/NK-Lync) |
-| Tào Hoàng Minh Vũ | [@aduengxds](https://github.com/aduengxds) |
+| Phùng Duy Hoàng（冯维黄 · Féng Wéi Huáng） | [@21xDHoang](https://github.com/21xDHoang) |
+| Bùi Nam Khánh（裴南庆 · Péi Nán Qìng） | [@NK-Lync](https://github.com/NK-Lync) |
+| Tào Hoàng Minh Vũ（曹黄明武 · Cáo Huáng Míng Wǔ） | [@aduengxds](https://github.com/aduengxds) |
+
+*括号内为汉语读法；正式写法以越南语原名为准。*
 
 两阶段流水线：**检测器**定位航拍图像中的每一栋房屋，**分类器**判读裁剪区域的状态，然后按类别统计房屋数量。
 

@@ -6,9 +6,11 @@
 
 | メンバー | GitHub |
 | --- | --- |
-| Phòng Duy Hoàng | [@21xDHoang](https://github.com/21xDHoang) |
-| Bùi Nam Khánh | [@NK-Lync](https://github.com/NK-Lync) |
-| Tào Hoàng Minh Vũ | [@aduengxds](https://github.com/aduengxds) |
+| Phùng Duy Hoàng（フン・ズイ・ホアン） | [@21xDHoang](https://github.com/21xDHoang) |
+| Bùi Nam Khánh（ブイ・ナム・カイン） | [@NK-Lync](https://github.com/NK-Lync) |
+| Tào Hoàng Minh Vũ（タオ・ホアン・ミン・ヴー） | [@aduengxds](https://github.com/aduengxds) |
+
+*括弧内は日本語表記。正式な氏名はベトナム語表記を優先します。*
 
 2 段階のパイプラインです。**検出器**が空撮画像内の各家屋の位置を特定し、**分類器**が切り出した領域の状態を判定し、最後にクラスごとに家屋数を数えます。
 
