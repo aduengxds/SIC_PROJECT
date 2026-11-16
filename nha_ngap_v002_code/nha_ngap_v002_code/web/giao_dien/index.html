@@ -206,6 +206,9 @@
           <div class="than"><img id="anh-kq" alt="Ảnh đã nhận diện"></div>
         </div>
       </div>
+      <div style="margin-top: 12px; text-align: right;">
+        <button id="nut-xuat" type="button" style="background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">📥 Tải xuống ảnh kết quả</button>
+      </div>
     </div>
 
     <div class="the">
@@ -399,6 +402,21 @@ $('tep-chup').addEventListener('change', function () {
 });
 $('tha').addEventListener('drop', function (e) {
   if (e.dataTransfer && e.dataTransfer.files.length) nhanTep(e.dataTransfer.files[0]);
+});
+
+$('nut-xuat').addEventListener('click', function () {
+  var src = $('anh-kq').src;
+  if (!src || !src.startsWith('data:')) {
+    alert('Chưa có ảnh kết quả phân tích để tải xuống.');
+    return;
+  }
+  var a = document.createElement('a');
+  a.href = src;
+  var name = (tepDangCo && tepDangCo.name) ? tepDangCo.name.replace(/\.[^/.]+$/, '') : 'flood';
+  a.download = 'ket_qua_nhan_dien_' + name + '.jpg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 });
 
 // ---------------------------------------------------------------------------
